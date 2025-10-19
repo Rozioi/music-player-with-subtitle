@@ -1,0 +1,54 @@
+.card {
+    width: 100%;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    background: #eff2fb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    margin-bottom: 12px;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    :global(.ant-card-body) {
+        padding: 14px 12px;
+    }
+}
+
+.selected {
+    border: 2px solid #4d7bfb !important;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1px 2px;
+}
+
+.info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.name {
+    font-weight: 600;
+    color: #222;
+    font-size: 15px;
+}
+
+.country {
+    font-size: 13px;
+    color: #777;
+}
+
+.rating {
+    font-weight: 600;
+    color: #333;
+    border: 1px solid #bcbcbc;
+    border-radius: 50px;
+    padding: 2px 8px;
+    font-size: 14px;
+}

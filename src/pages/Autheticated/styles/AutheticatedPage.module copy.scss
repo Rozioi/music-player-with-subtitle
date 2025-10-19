@@ -1,0 +1,195 @@
+:global {
+    .react-tel-input {
+        width: 100%;
+        font-family: inherit;
+        // position: relative;
+        .form-control {
+            background-color: #eff2fb !important;
+            border-radius: 8px !important;
+            border: none !important;
+            height: 44px !important;
+            font-size: 14px !important;
+            padding-left: 50px !important;
+            color: #494949 !important;
+
+            &::placeholder {
+                color: #b3b8c6 !important;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+            }
+        }
+
+        .flag-dropdown {
+            background: transparent !important;
+            border: none !important;
+
+            &:hover {
+                background: transparent !important;
+            }
+        }
+    }
+
+    .country-list {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+
+        border-radius: 12px;
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+        border: 1px solid #e6e8f0;
+        max-height: 320px;
+        overflow-y: auto;
+        z-index: 9999;
+        animation: fadeInDropdown 0.25s ease forwards;
+        padding: 6px 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        .search {
+            padding: 4px 14px 4px 14px;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            z-index: 10;
+
+            .search-emoji {
+                display: none;
+            }
+            .search-box {
+                width: 100%;
+                height: 38px;
+                border: 1px solid #dfe3ed;
+                border-radius: 10px;
+                background-color: #f7f8fb;
+                padding: 0 12px;
+                font-size: 14px;
+                color: #494949;
+                outline: none;
+                transition: all 0.2s ease;
+
+                &::placeholder {
+                    color: #a0a7b5;
+                }
+
+                &:focus {
+                    border-color: #7b61ff;
+                    box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.15);
+                    background-color: #ffffff;
+                }
+            }
+        }
+
+        .country {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 0 8px;
+
+            &:hover {
+                background-color: #f3f5fa;
+                transform: translateX(2px);
+            }
+
+            .flag {
+                width: 24px;
+                height: 16px;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                border-radius: 3px;
+                flex-shrink: 0;
+            }
+            .country-name {
+                font-size: 14px;
+                font-weight: 500;
+                color: #2f2f2f;
+
+                flex: 1;
+                margin-left: 8px;
+            }
+
+            .dial-code {
+                font-size: 13px;
+                font-weight: 500;
+                color: #7b7b7b;
+            }
+        }
+    }
+}
+
+.page {
+    display: flex;
+
+    background-color: #f5f5f5;
+    width: 100vw;
+    // height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    label {
+        color: #494949;
+        width: 85%;
+
+        input::placeholder {
+            color: #b3b8c6;
+        }
+    }
+}
+
+.title {
+    color: #494949;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.phoneContainer {
+    width: 100%;
+
+    .form-control {
+        width: 100% !important;
+    }
+}
+
+.flagDropdown {
+    border: none !important;
+    background: transparent !important;
+}
+
+.phoneInput {
+    background-color: #eff2fb !important;
+    border-radius: 8px !important;
+    border: none !important;
+    height: 44px !important;
+    font-size: 14px !important;
+    padding-left: 48px !important; // чтобы не налезал флаг
+    color: #494949 !important;
+
+    &::placeholder {
+        color: #b3b8c6 !important;
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+    }
+}
+// Контейнер
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

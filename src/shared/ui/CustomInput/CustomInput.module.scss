@@ -1,0 +1,63 @@
+.wrapper {
+    width: 95%;
+
+    :global(.ant-input),
+    :global(.ant-input-password) {
+        background-color: #eff2fb !important;
+        border-radius: 8px !important;
+        border: none !important;
+        height: 44px !important;
+        font-size: 14px !important;
+        padding: 0 12px !important;
+        color: #494949 !important;
+
+        &::placeholder {
+            color: #b3b8c6 !important;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.15);
+            outline: none;
+        }
+    }
+
+    :global(.ant-input-affix-wrapper) {
+        border-radius: 8px !important;
+        background-color: #eff2fb !important;
+        border: none !important;
+        height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: box-shadow 0.2s ease;
+
+        &:hover {
+            box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.15);
+        }
+
+        input {
+            background: transparent !important;
+            color: #494949 !important;
+
+            &::placeholder {
+                color: #b3b8c6 !important;
+            }
+        }
+    }
+
+    :global(.ant-input-suffix) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 8px;
+
+        svg {
+            transition: transform 0.2s ease;
+            cursor: pointer;
+            color: #c5cdea;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+}

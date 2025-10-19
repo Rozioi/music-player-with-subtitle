@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 64px;
+    width: 100%;
+    background-color: var(--tg-theme-secondary-bg-color, #fff);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+    padding-bottom: env(safe-area-inset-bottom);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+
+    @supports (backdrop-filter: blur(10px)) {
+        background-color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    color: var(--tg-theme-hint-color, #666);
+
+    svg {
+        font-size: 22px;
+        transition: all 0.25s ease;
+        background: linear-gradient(
+            120deg,
+            rgba(77, 123, 251, 0.3) 0%,
+            rgba(137, 189, 255, 0.3) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    &:hover svg {
+        background: linear-gradient(120deg, #4d7bfb 0%, #89bdff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    &:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+
+    // Правильное активное состояние
+    &.isActive {
+        color: var(--tg-theme-button-color, #4d7bfb);
+
+        svg {
+            background: linear-gradient(120deg, #4d7bfb 0%, #89bdff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    span {
+        font-size: 12px;
+        font-weight: 500;
+    }
+}

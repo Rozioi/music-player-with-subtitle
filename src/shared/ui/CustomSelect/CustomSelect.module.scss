@@ -1,0 +1,45 @@
+.custom-select {
+    width: 100%;
+    position: relative;
+    padding: 8px 0;
+
+    /* &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #afb6d0;
+        opacity: 0.6;
+    }
+
+    &::before {
+        top: 1pp ;
+    }
+
+    &::after {
+        bottom: 0;
+    } */
+
+    :global(.ant-select-selector) {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        height: auto;
+        padding: 0;
+    }
+
+    :global(.ant-select-selection-item) {
+        font-size: 24px;
+        color: #afb6d0;
+    }
+
+    :global(.ant-select-arrow) {
+        color: #afb6d0;
+    }
+
+    :global(.ant-select-focused) {
+        box-shadow: none;
+    }
+}
