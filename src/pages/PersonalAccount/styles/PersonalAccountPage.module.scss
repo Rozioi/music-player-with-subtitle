@@ -1,0 +1,105 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    // background-color: #f9f9fb;
+    min-height: 100vh;
+}
+
+.card {
+    width: 100vw;
+    border-radius: 16px;
+    background-color: transparent;
+    border: none;
+    // padding: 1.5rem;
+    //  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.balanceBox {
+    background-color: #86a4ff;
+    color: white;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.balanceText {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.balanceAmount {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.topUp {
+    color: white !important;
+    text-decoration: underline;
+
+    opacity: 0.9;
+}
+
+.field {
+    margin-bottom: 1.2rem;
+
+    .label {
+        display: block;
+        margin-bottom: 0.4rem;
+        color: #494949;
+        font-weight: 500;
+    }
+
+    :global(.ant-input) {
+        color: #5d5c5c;
+        border-radius: 8px;
+        background-color: #f6f8ff;
+    }
+}
+
+.saveBtn {
+    border-radius: 8px;
+    margin-top: 1rem;
+    height: 40px;
+    font-weight: 500;
+    background: linear-gradient(90deg, #6c8bff, #709bff);
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.2rem;
+
+    :global(.ant-btn-link) {
+        padding: 0;
+        color: #7a8cff;
+        font-size: 13px;
+    }
+}
+
+.backButton {
+    color: #bcbcbc;
+    font-weight: 500;
+    font-size: 26px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    height: 30px;
+    border-radius: 50%;
+
+    &:hover {
+        color: #4d7bfb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(77, 123, 251, 0.3);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}

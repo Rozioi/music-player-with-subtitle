@@ -7,4 +7,5 @@ export default defineConfig({
   server: {
     allowedHosts: ["rozioi.pro"],
   },
+  assetsInclude: ["**/*.md"],
 });

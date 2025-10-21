@@ -1,11 +1,24 @@
 import logo from "../../../shared/assets/images/logo.png";
 import { useAppNavigation } from "../../../shared/hooks/useAppNavigation";
 import { CustomSelect } from "../../../shared/ui/CustomSelect/CustomSelect";
+import { useEffect } from "react";
 
 import styles from "../styles/Onboarding.module.scss";
 
 export const OnBoardingPage = () => {
   const { goTo } = useAppNavigation();
+
+  useEffect(() => {
+    // Mark onboarding as seen when the user navigates away (component unmounts)
+    return () => {
+      try {
+        localStorage.setItem("onboardingSeen", "true");
+      } catch {
+        // ignore storage errors
+      }
+    };
+  }, []);
+
   return (
     <div className={styles["page"]}>
       <div className={styles["logo-container"]}>

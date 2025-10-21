@@ -5,6 +5,9 @@ import LoginPage from "../../pages/Autheticated/LoginPage";
 import Main from "../../pages/Main/Main";
 import AnalysisSelectionPage from "../../pages/AnalysisSelectionPage/AnalysisSelectionPage";
 import DoctorSearchPage from "../../pages/DoctorSearch/DoctorSearch";
+import PersonalAccountPage from "../../pages/PersonalAccount/PersonalAccountPage";
+import RefundPolicyPage from "../../pages/PersonalAccount/RefundPolicyPage";
+import { DoctorProfilePage } from "../../pages/DoctorProfile/DoctorProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +19,10 @@ export const router = createBrowserRouter([
       { path: "analyses", element: <AnalysisSelectionPage /> },
       { path: "search", element: <DoctorSearchPage /> },
       { path: "chat", element: <div>Чат</div> },
-      { path: "profile", element: <div>Профиль</div> },
+      { path: "profile", element: <PersonalAccountPage /> },
+      { path: "profile/:slug", element: <RefundPolicyPage /> },
+      { path: "search/doctor/:id", element: <DoctorProfilePage /> },
+
       { path: "*", element: <div onClick={() => {}}>back</div> },
     ],
   },

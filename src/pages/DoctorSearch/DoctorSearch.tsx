@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Input, List, Button, Rate, Avatar } from "antd";
 import { RightOutlined, DownOutlined } from "@ant-design/icons";
 import styles from "./styles/DoctorSearch.module.scss";
+import { IoIosArrowBack } from "react-icons/io";
 import { DoctorCard } from "../../shared/ui/DoctorCard/DoctorCard";
+import { useAppNavigation } from "../../shared/hooks/useAppNavigation";
+
 const doctorCategories = [
   "Гинеколог",
   "ЛОР",
@@ -50,6 +53,7 @@ const doctors = [
 const DoctorSearchPage: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const { goBack } = useAppNavigation();
 
   const handleToggleCategory = (category: string) => {
     setOpenCategory((prev) => (prev === category ? null : category));
@@ -58,9 +62,13 @@ const DoctorSearchPage: React.FC = () => {
   const filteredCategories = doctorCategories.filter((cat) =>
     cat.toLowerCase().includes(search.toLowerCase()),
   );
+  const { goTo } = useAppNavigation();
 
   return (
     <div className={styles.container}>
+      <div onClick={goBack} className={styles.backButton}>
+        <IoIosArrowBack />
+      </div>
       <h2 className={styles.title}>Поиск врача</h2>
 
       <Input.Search
@@ -79,7 +87,7 @@ const DoctorSearchPage: React.FC = () => {
           return (
             <div key={item} className={styles.categoryBlock}>
               <List.Item
-                className={styles.item}
+                className={`${styles.item} ${openCategory === item ? styles.activeItem : ""}`}
                 onClick={() => handleToggleCategory(item)}
               >
                 <span>{item}</span>
@@ -97,7 +105,11 @@ const DoctorSearchPage: React.FC = () => {
                 <div className={styles.doctorList}>
                   {categoryDoctors.length > 0 ? (
                     categoryDoctors.map((doctor) => (
-                      <DoctorCard key={doctor.id} {...doctor} />
+                      <DoctorCard
+                        onSelect={() => goTo("doctor/1")}
+                        key={doctor.id}
+                        {...doctor}
+                      />
                     ))
                   ) : (
                     <div className={styles.empty}>
