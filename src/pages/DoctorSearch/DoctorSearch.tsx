@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Input, List, Button, Rate, Avatar } from "antd";
+import { useState } from "react";
+import { Input, List, Button } from "antd";
 import { RightOutlined, DownOutlined } from "@ant-design/icons";
 import styles from "./styles/DoctorSearch.module.scss";
 import { IoIosArrowBack } from "react-icons/io";

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { NavBottomPanel } from "../shared/ui/NavBottomPanel/NavBottomPanel";
 import styles from "../shared/assets/styles/MainLayout.module.scss";
-import { OnBoardingPage } from "../pages/Onboarding/ui/Onboarding";
 
 export const MainLayout = () => {
   const location = useLocation();
@@ -21,7 +20,7 @@ export const MainLayout = () => {
   useEffect(() => {
     const prev = prevPathRef.current;
     const curr = location.pathname;
-
+    console.log(showOnboarding);
     if (prev === "/onboarding" && curr !== "/onboarding") {
       try {
         localStorage.setItem("onboardingSeen", "true");
@@ -37,17 +36,11 @@ export const MainLayout = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {showOnboarding ? <Outlet /> : <Outlet />}
+        <Outlet />
       </div>
-      {showOnboarding ? (
-        <div className={styles.nav}>
-          <NavBottomPanel />
-        </div>
-      ) : (
-        <div className={styles.nav}>
-          <NavBottomPanel />
-        </div>
-      )}
+      <div className={styles.nav}>
+        <NavBottomPanel />
+      </div>
     </div>
   );
 };

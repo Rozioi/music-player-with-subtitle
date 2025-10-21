@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import logo from "../../shared/assets/images/logo.png";
 import EUGer from "../../shared/assets/images/EUGer.png";
 import styles from "./styles/Main.module.scss";

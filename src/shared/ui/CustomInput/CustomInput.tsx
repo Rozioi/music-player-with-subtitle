@@ -1,9 +1,17 @@
-import React from "react";
+import type { FC, ChangeEvent } from "react";
 import { Input } from "antd";
 import styles from "./CustomInput.module.scss";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
-export const CustomInput = ({
+interface CustomInputProps {
+  type?: "text" | "password";
+  placeholder?: string;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  [key: string]: any;
+}
+
+export const CustomInput: FC<CustomInputProps> = ({
   type = "text", // 'text' | 'password'
   placeholder = "",
   value,

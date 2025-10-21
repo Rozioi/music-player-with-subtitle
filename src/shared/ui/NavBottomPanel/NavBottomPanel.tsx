@@ -3,7 +3,7 @@ import styles from "./NavBottomPanel.module.scss";
 
 import { GoHomeFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
-import { PiChatCircleTextFill } from "react-icons/pi";
+// import { PiChatCircleTextFill } from "react-icons/pi";
 import { BsFillPersonFill } from "react-icons/bs";
 
 export const NavBottomPanel = () => {

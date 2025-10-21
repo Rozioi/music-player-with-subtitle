@@ -1,4 +1,4 @@
-import React, { createContext, type ReactNode } from "react";
+import { createContext, type ReactNode, type FC } from "react";
 import {
   useTelegramWebApp,
   type TelegramData,
@@ -6,9 +6,7 @@ import {
 
 export const TelegramContext = createContext<TelegramData | null>(null);
 
-export const TelegramProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const TelegramProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const data = useTelegramWebApp();
   return (
     <TelegramContext.Provider value={data}>{children}</TelegramContext.Provider>

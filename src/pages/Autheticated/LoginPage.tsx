@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { CustomInput } from "../../shared/ui/CustomInput/CustomInput";
@@ -43,7 +43,9 @@ const LoginPage = () => {
             type="password"
             value={password}
             placeholder="Введите пароль"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
           />
         </label>
         <a href="#" className={styles.forgotPassword}>

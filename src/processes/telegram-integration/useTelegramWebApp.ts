@@ -11,7 +11,7 @@ export interface TelegramData {
   isReady: boolean;
 }
 
-export const useTelegramWebApp = (): TelegramData => {
+export function useTelegramWebApp(): TelegramData {
   const [user, setUser] = useState(getTelegramUser());
   const [theme, setTheme] = useState(getTelegramTheme());
   const [isReady, setReady] = useState(false);
@@ -40,4 +40,4 @@ export const useTelegramWebApp = (): TelegramData => {
   }, []);
 
   return { user, theme, isReady };
-};
+}

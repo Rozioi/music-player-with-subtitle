@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Button, Rate } from "antd";
+import type { FC } from "react";
+import { Card, Button } from "antd";
 import {
   ArrowLeftOutlined,
   ShareAltOutlined,
@@ -19,7 +19,7 @@ interface DoctorProfileProps {
   onBack?: () => void;
 }
 
-export const DoctorProfile: React.FC<DoctorProfileProps> = ({
+export const DoctorProfile: FC<DoctorProfileProps> = ({
   name,
   specialty,
   experience,

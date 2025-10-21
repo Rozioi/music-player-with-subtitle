@@ -1,5 +1,5 @@
 import React from "react";
-import { Rate, Card, Avatar } from "antd";
+import { Card, Avatar } from "antd";
 import styles from "./DoctorCard.module.scss";
 
 interface DoctorCardProps {
