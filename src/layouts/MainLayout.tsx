@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { NavBottomPanel } from "../shared/ui/NavBottomPanel/NavBottomPanel";
 import styles from "../shared/assets/styles/MainLayout.module.scss";
-import { OnBoardingPage } from "../pages/Onboarding/ui/Onboarding";
+// import { OnBoardingPage } from "../pages/Onboarding/ui/Onboarding";
 
 export const MainLayout = () => {
   const location = useLocation();
