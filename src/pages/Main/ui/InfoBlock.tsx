@@ -13,7 +13,7 @@ export const InfoBlock = () => {
             "Консультации от квалифицированных врачей из стран Европы не покидая пределы вашей страны!",
             "Высокие стандарты качества обслуживания и медицинские рекомендации.",
           ],
-          image: "src/shared/assets/images/advantages/1.png",
+          image: "/images/advantages/1.png",
         },
         {
           title: "Быстрота и удобство:",
@@ -21,33 +21,33 @@ export const InfoBlock = () => {
             "Возможность получить консультацию не выходя из дома.",
             "Оперативный ответ — от минуты до часа. Формат онлайн «живая очередь».",
           ],
-          image: "src/shared/assets/images/advantages/2.png",
+          image: "/images/advantages/2.png",
         },
         {
           title: "Разнообразие каналов общения:",
           points: [
             "Возможность использовать текст, фото, аудио и видео форматы для общения с врачом.",
           ],
-          image: "src/shared/assets/images/advantages/3.png",
+          image: "/images/advantages/3.png",
         },
         {
           title: "Конфиденциальность и безопасность:",
           points: ["Гарантирована полная анонимность и защита ваших данных."],
-          image: "src/shared/assets/images/advantages/4.png",
+          image: "/images/advantages/4.png",
         },
         {
           title: "Безопасная альтернатива самодиагностике:",
           points: [
             "Получение профессионального совета вместо вредной «самолечения» с помощью интернета.",
           ],
-          image: "src/shared/assets/images/advantages/5.png",
+          image: "/images/advantages/5.png",
         },
         {
           title: "Обратная связь и улучшение сервиса:",
           points: [
             "Возможность оставить отзыв и повлиять на улучшение сервиса.",
           ],
-          image: "src/shared/assets/images/advantages/6.png",
+          image: "/images/advantages/6.png",
         },
       ],
     },
@@ -60,7 +60,7 @@ export const InfoBlock = () => {
             "Трудности в поиске квалифицированных специалистов в своем регионе",
             "Долгое ожидание очереди на прием к врачу.",
           ],
-          image: "src/shared/assets/images/problems/1.png",
+          image: "/images/problems/1.png",
         },
         {
           title: "Сомнения и потребность в дополнительной информации:",
@@ -68,14 +68,14 @@ export const InfoBlock = () => {
             "Неопределенность после предыдущего диагноза или лечения.",
             "Необходимость услышать второе мнение.",
           ],
-          image: "src/shared/assets/images/problems/2.png",
+          image: "/images/problems/2.png",
         },
         {
           title: "Страх и неуверенность в здоровье:",
           points: [
             "Непонимание результатов анализов и желательность консультации без стресса и спешки.",
           ],
-          image: "src/shared/assets/images/problems/3.png",
+          image: "/images/problems/3.png",
         },
         {
           title: "Время и логистические ограничения:",
@@ -83,7 +83,7 @@ export const InfoBlock = () => {
             "	Нехватка времени на посещение врача в офисе или больнице.",
             "Находясь за границей, возникают сложности с доступом к местным медицинским услугам.",
           ],
-          image: "src/shared/assets/images/problems/4.png",
+          image: "/images/problems/4.png",
         },
         {
           title: "Желание избежать ненужных визитов:",
@@ -91,7 +91,7 @@ export const InfoBlock = () => {
             "	Потребность только в информационной поддержке.",
             "Предпочтение получить консультацию быстро и без формальностей.",
           ],
-          image: "src/shared/assets/images/problems/5.png",
+          image: "/images/problems/5.png",
         },
         {
           title: "Дискомфорт и стеснение:",
@@ -99,14 +99,14 @@ export const InfoBlock = () => {
             "Неудобство или стеснительность при обсуждении личных вопросов здоровья лицом к лицу.",
             "Предпочтение конфиденциальности и анонимности при взаимодействии с врачом",
           ],
-          image: "src/shared/assets/images/problems/6.png",
+          image: "/images/problems/6.png",
         },
         {
           title: "Психологический комфорт:",
           points: [
             "Стресс и тревожность, вызванные ожиданием визита к врачу или неприятными визитами в медицинские учреждения.",
           ],
-          image: "src/shared/assets/images/problems/7.png",
+          image: "/images/problems/7.png",
         },
       ],
     },

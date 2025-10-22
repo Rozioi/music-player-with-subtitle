@@ -1,20 +1,20 @@
 import { createBrowserRouter } from "react-router";
-import App from "../../App";
 import { MainLayout } from "../../layouts/MainLayout";
-import LoginPage from "../../pages/Autheticated/LoginPage";
+import LoginPage from "../../pages/Autheticated/ui/LoginPage";
 import Main from "../../pages/Main/Main";
 import AnalysisSelectionPage from "../../pages/AnalysisSelectionPage/AnalysisSelectionPage";
 import DoctorSearchPage from "../../pages/DoctorSearch/DoctorSearch";
 import PersonalAccountPage from "../../pages/PersonalAccount/PersonalAccountPage";
 import RefundPolicyPage from "../../pages/PersonalAccount/RefundPolicyPage";
 import { DoctorProfilePage } from "../../pages/DoctorProfile/DoctorProfilePage";
+import RegisterPage from "../../pages/Autheticated/ui/RegisterPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/", // корневая обёртка
+    path: "/",
     element: <MainLayout />,
     children: [
-      { index: true, element: <Main /> }, // рендер при /
+      { index: true, element: <Main /> },
       { path: "home", element: <Main /> },
       { path: "analyses", element: <AnalysisSelectionPage /> },
       { path: "search", element: <DoctorSearchPage /> },
@@ -28,7 +28,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <App />,
+    element: <LoginPage />,
     children: [{ index: true, element: <LoginPage /> }],
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+    children: [{ index: true, element: <RegisterPage /> }],
   },
 ]);
