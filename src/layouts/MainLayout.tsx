@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { NavBottomPanel } from "../shared/ui/NavBottomPanel/NavBottomPanel";
 import styles from "../shared/assets/styles/MainLayout.module.scss";
-// import { OnBoardingPage } from "../pages/Onboarding/ui/Onboarding";
+import { apiClient } from "../api/api";
+import { useAppNavigation } from "../shared/hooks/useAppNavigation";
+import { Loader } from "../shared/ui/Loader/Loader";
 
 export const MainLayout = () => {
   const location = useLocation();
@@ -12,16 +14,13 @@ export const MainLayout = () => {
     try {
       return !localStorage.getItem("onboardingSeen");
     } catch {
-      // If localStorage is not available for any reason, do not block app
       return false;
     }
   });
 
-  // When user navigates away from the onboarding page, mark onboarding as seen.
   useEffect(() => {
     const prev = prevPathRef.current;
     const curr = location.pathname;
-    console.log(showOnboarding);
     if (prev === "/onboarding" && curr !== "/onboarding") {
       try {
         localStorage.setItem("onboardingSeen", "true");
@@ -33,16 +32,31 @@ export const MainLayout = () => {
 
     prevPathRef.current = curr;
   }, [location.pathname]);
+  const { goTo } = useAppNavigation();
+  useEffect(() => {
+    const checkServer = async () => {
+      const res = await apiClient.checkedServer();
+
+      if (!res.success) {
+        goTo("tech");
+        return;
+      }
+    };
+
+    checkServer();
+  }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <Outlet />
-      </div>
+    <Suspense fallback={<Loader fullScreen text="Загрузка..." size="medium" />}>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <Outlet />
+        </div>
 
-      <div className={styles.nav}>
-        <NavBottomPanel />
+        <div className={styles.nav}>
+          <NavBottomPanel />
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };

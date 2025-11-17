@@ -1,11 +1,20 @@
+import { memo, useCallback } from "react";
 import logo from "../../shared/assets/images/logo.png";
 import EUGer from "../../shared/assets/images/EUGer.png";
 import styles from "./styles/Main.module.scss";
 import { InfoBlock } from "./ui/InfoBlock";
 import { useAppNavigation } from "../../shared/hooks/useAppNavigation";
 
-const Main = () => {
+const Main = memo(() => {
   const { goTo } = useAppNavigation();
+
+  const handleSearchClick = useCallback(() => {
+    goTo("/search");
+  }, [goTo]);
+
+  const handleAnalysesClick = useCallback(() => {
+    goTo("/analyses");
+  }, [goTo]);
 
   return (
     <div className={styles.page}>
@@ -29,13 +38,13 @@ const Main = () => {
       <div className={styles.buttons}>
         <button
           className={styles.primaryButton}
-          onClick={() => goTo("/search")}
+          onClick={handleSearchClick}
         >
           Поиск специалиста
         </button>
         <button
           className={styles.secondaryButton}
-          onClick={() => goTo("/analyses")}
+          onClick={handleAnalysesClick}
         >
           Расшифровки анализов
         </button>
@@ -43,6 +52,8 @@ const Main = () => {
       <InfoBlock />
     </div>
   );
-};
+});
+
+Main.displayName = "Main";
 
 export default Main;

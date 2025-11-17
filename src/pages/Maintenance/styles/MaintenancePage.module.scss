@@ -1,0 +1,99 @@
+container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e6eeff 100%);
+    padding: 20px;
+}
+
+.content {
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    background: white;
+    padding: 32px 24px;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.iconWrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #4d7bfb 0%, #89bdff 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(77, 123, 251, 0.25);
+}
+
+.icon {
+    font-size: 36px;
+    color: white;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 16px;
+}
+
+.description {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4b5563;
+    margin-bottom: 12px;
+}
+
+.subtext {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.retryButton {
+    height: 44px;
+    padding: 0 24px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #4d7bfb 0%, #89bdff 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(77, 123, 251, 0.2);
+    transition: all 0.3s ease !important;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(77, 123, 251, 0.3);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    svg {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 24px 20px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .description {
+        font-size: 15px;
+    }
+}

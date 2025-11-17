@@ -6,6 +6,7 @@ import {
   StarFilled,
 } from "@ant-design/icons";
 import styles from "./styles/DoctorProfile.module.scss";
+import WebApp from "@twa-dev/sdk";
 
 interface DoctorProfileProps {
   name: string;
@@ -16,7 +17,9 @@ interface DoctorProfileProps {
   about: string;
   rating: number;
   image: string;
+  doctorId?: string | number;
   onBack?: () => void;
+  onStartChat?: () => void;
 }
 
 export const DoctorProfile: FC<DoctorProfileProps> = ({
@@ -28,8 +31,31 @@ export const DoctorProfile: FC<DoctorProfileProps> = ({
   about,
   rating,
   image,
+  doctorId,
   onBack,
+  onStartChat,
 }) => {
+  const shareProfile = () => {
+    const shareText = `Врач: ${name}\nСпециальность: ${specialty}\nРейтинг: ${rating.toFixed(1)}\nОпыт: ${experience}\nСтоимость: ${price}`;
+    const shareUrl = window.location.href;
+
+    try {
+      if (typeof WebApp !== "undefined" && WebApp.openLink) {
+        const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        WebApp.openLink(telegramShareUrl);
+      } else if (window.Telegram?.WebApp?.openLink) {
+        const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        window.Telegram.WebApp.openLink(telegramShareUrl);
+      } else {
+        const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        window.open(telegramShareUrl, "_blank");
+      }
+    } catch (error) {
+      console.error("Ошибка при попытке поделиться через Telegram:", error);
+      const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+      window.open(telegramShareUrl, "_blank");
+    }
+  };
   return (
     <div className={styles.container}>
       <div className={styles.imageWrapper}>
@@ -45,6 +71,7 @@ export const DoctorProfile: FC<DoctorProfileProps> = ({
             <Button
               type="text"
               icon={<ShareAltOutlined />}
+              onClick={shareProfile}
               className={styles.iconButton}
             />
           </div>
@@ -82,9 +109,17 @@ export const DoctorProfile: FC<DoctorProfileProps> = ({
           <p className={styles.aboutText}>{about}</p>
         </div>
 
-        <Button type="primary" className={styles.chatButton}>
-          Начать чат
-        </Button>
+        {onStartChat && (
+          <Button
+            type="primary"
+            size="large"
+            block
+            className={styles.chatButton}
+            onClick={onStartChat}
+          >
+            Начать чат
+          </Button>
+        )}
       </Card>
     </div>
   );

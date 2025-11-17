@@ -1,20 +1,20 @@
 import { useEffect } from "react";
 import "./App.css";
 import { useTelegram } from "./app/providers/useTelegram";
-import { OnBoardingPage } from "./pages/Onboarding/ui/Onboarding";
+import { Router } from "./app/router";
 
 function App() {
-  const { user, isReady } = useTelegram();
-  useEffect(() => {
-    console.log(user?.username);
-  }, []);
-  if (!isReady) return <div>Загрузка Telegram...</div>;
+  const { isReady } = useTelegram();
 
-  return (
-    <>
-      <OnBoardingPage />
-    </>
-  );
+  if (!isReady) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-text">Загрузка Telegram...</div>
+      </div>
+    );
+  }
+
+  return <Router />;
 }
 
 export default App;

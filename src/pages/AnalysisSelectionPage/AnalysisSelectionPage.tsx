@@ -18,12 +18,11 @@ const AnalysisSelectionPage: React.FC = () => {
     "urine",
     "stool",
   ]);
-  const [isSuccessful, setIsSuccessful] = useState(true);
+  const { goTo } = useAppNavigation();
   const handlePay = () => {
-    console.log("Выбран врач:", selectedDoctor);
-    console.log("Выбранные анализы:", selectedAnalyses);
-    setIsSuccessful(!isSuccessful);
-    setIsModalOpen(true);
+    if (selectedDoctor) {
+      goTo(`/payment?doctorId=${selectedDoctor}&serviceType=analysis`);
+    }
   };
 
   const analyses = [
@@ -120,28 +119,6 @@ const AnalysisSelectionPage: React.FC = () => {
         </Button>
       </div>
 
-      <SuccessModal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div
-          className={`${styles.successIcon} ${isSuccessful ? styles.success : styles.error}`}
-        >
-          {isSuccessful ? <FaCheck /> : <FaExclamation />}
-        </div>
-        <h3 className={styles.title}>
-          {" "}
-          {isSuccessful
-            ? "Оплата прошла успешно!"
-            : "Недостаточно средств для оплаты услуги"}
-        </h3>
-        <p className={styles.description}>
-          {isSuccessful
-            ? "Пожалуйста прикрепите ваш результат анализов чате с врачом ниже."
-            : "Пополните баланс и попробуйте снова."}
-        </p>
-
-        <Button size="large" className={styles.attachButton}>
-          {isSuccessful ? "Перейти в чат" : "Попробовать ещё"}
-        </Button>
-      </SuccessModal>
     </ConfigProvider>
   );
 };

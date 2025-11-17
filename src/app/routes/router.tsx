@@ -1,39 +1,159 @@
 import { createBrowserRouter } from "react-router";
+import { lazy, Suspense } from "react";
 import { MainLayout } from "../../layouts/MainLayout";
-import LoginPage from "../../pages/Autheticated/ui/LoginPage";
-import Main from "../../pages/Main/Main";
-import AnalysisSelectionPage from "../../pages/AnalysisSelectionPage/AnalysisSelectionPage";
-import DoctorSearchPage from "../../pages/DoctorSearch/DoctorSearch";
-import PersonalAccountPage from "../../pages/PersonalAccount/PersonalAccountPage";
-import RefundPolicyPage from "../../pages/PersonalAccount/RefundPolicyPage";
+import { ProtectedRoute } from "../ui/ProtectedRoute";
+import { Loader } from "../../shared/ui/Loader/Loader";
+
+const preloadMain = () => import("../../pages/Main/Main");
+const preloadSearch = () => import("../../pages/DoctorSearch/DoctorSearch");
+
+const OnBoardingPage = lazy(() =>
+  import("../../pages/Onboarding/ui/Onboarding").then((module) => ({
+    default: module.OnBoardingPage,
+  })),
+);
+const LoginPage = lazy(() => import("../../pages/Autheticated/ui/LoginPage"));
+const RegisterPage = lazy(
+  () => import("../../pages/Autheticated/ui/RegisterPage"),
+);
+const DoctorRegisterPage = lazy(
+  () => import("../../pages/Autheticated/ui/DoctorRegisterPage"),
+);
+const Main = lazy(() => import("../../pages/Main/Main"));
+const AnalysisSelectionPage = lazy(
+  () => import("../../pages/AnalysisSelectionPage/AnalysisSelectionPage"),
+);
+const DoctorSearchPage = lazy(
+  () => import("../../pages/DoctorSearch/DoctorSearch"),
+);
+const PersonalAccountPage = lazy(
+  () => import("../../pages/PersonalAccount/PersonalAccountPage"),
+);
+const RefundPolicyPage = lazy(
+  () => import("../../pages/PersonalAccount/RefundPolicyPage"),
+);
+const MaintenancePage = lazy(
+  () => import("../../pages/Maintenance/MaintenancePage"),
+);
+const PaymentPage = lazy(() => import("../../pages/Payment/PaymentPage"));
+const ChatListPage = lazy(() => import("../../pages/ChatList/ChatListPage"));
 import { DoctorProfilePage } from "../../pages/DoctorProfile/DoctorProfilePage";
-import RegisterPage from "../../pages/Autheticated/ui/RegisterPage";
+import { ServerGuard } from "../ui/ServerGuard";
+import { PublicLayout } from "../../layouts/PublicLayout";
+// const DoctorProfilePage = lazy(
+//   () => import("../../pages/DoctorProfile/DoctorProfilePage"),
+// );
+
+if (typeof window !== "undefined") {
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(
+      () => {
+        preloadMain();
+        preloadSearch();
+      },
+      { timeout: 2000 },
+    );
+  } else {
+    setTimeout(() => {
+      preloadMain();
+      preloadSearch();
+    }, 100);
+  }
+}
+
+const LoadingFallback = () => (
+  <Loader fullScreen text="Загрузка..." size="large" />
+);
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <ServerGuard>
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        </ServerGuard>
+      </Suspense>
+    ),
     children: [
       { index: true, element: <Main /> },
       { path: "home", element: <Main /> },
       { path: "analyses", element: <AnalysisSelectionPage /> },
       { path: "search", element: <DoctorSearchPage /> },
-      { path: "chat", element: <div>Чат</div> },
+      { path: "payment", element: <PaymentPage /> },
+      { path: "chat", element: <ChatListPage /> },
       { path: "profile", element: <PersonalAccountPage /> },
       { path: "profile/:slug", element: <RefundPolicyPage /> },
-      { path: "search/doctor/:id", element: <DoctorProfilePage /> },
-
-      { path: "*", element: <div onClick={() => {}}>back</div> },
+      {
+        path: "search/doctor/:id",
+        element: (
+          <Suspense
+            fallback={
+              <Loader fullScreen text="Загрузка профиля..." size="large" />
+            }
+          >
+            <DoctorProfilePage />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
+    path: "/doctor",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <ServerGuard>
+          <PublicLayout />
+        </ServerGuard>
+      </Suspense>
+    ),
+    children: [
+      {
+        path: ":slug",
+        element: <DoctorProfilePage />,
+      },
+    ],
+  },
+  {
+    path: "/welcome",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <OnBoardingPage />
+      </Suspense>
+    ),
+  },
+  {
     path: "/login",
-    element: <LoginPage />,
-    children: [{ index: true, element: <LoginPage /> }],
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <LoginPage />
+      </Suspense>
+    ),
   },
   {
     path: "/register",
-    element: <RegisterPage />,
-    children: [{ index: true, element: <RegisterPage /> }],
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <RegisterPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/registerDoc",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <DoctorRegisterPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/tech",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <MaintenancePage />
+      </Suspense>
+    ),
   },
 ]);

@@ -2,13 +2,16 @@
     display: flex;
     justify-content: center;
     padding: 2rem;
-    // background-color: #f9f9fb;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
 }
 
 .card {
-    width: 100vw;
+    width: 100%;
     border-radius: 16px;
     background-color: transparent;
     border: none;
@@ -104,5 +107,25 @@
 
     &:active {
         transform: translateY(0);
+    }
+}
+
+.logoutButton {
+    border-radius: 8px;
+    height: 44px;
+    font-weight: 500;
+    margin-top: 8px;
+    border-color: #ff4d4f;
+    color: #ff4d4f;
+
+    &:hover {
+        border-color: #ff7875;
+        color: #ff7875;
+        background-color: #fff1f0;
+    }
+
+    &:active {
+        border-color: #cf1322;
+        color: #cf1322;
     }
 }

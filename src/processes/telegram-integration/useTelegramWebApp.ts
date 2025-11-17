@@ -20,8 +20,6 @@ export function useTelegramWebApp(): TelegramData {
     try {
       tg.ready();
 
-      console.log("Telegram initDataUnsafe:", tg.initDataUnsafe);
-
       setUser(getTelegramUser());
       setTheme(getTelegramTheme());
       setReady(true);
@@ -31,8 +29,6 @@ export function useTelegramWebApp(): TelegramData {
 
       return () => tg.offEvent("themeChanged", themeHandler);
     } catch (err) {
-      console.error("Telegram SDK init error:", err);
-
       setUser(getTelegramUser());
       setTheme(getTelegramTheme());
       setReady(true);

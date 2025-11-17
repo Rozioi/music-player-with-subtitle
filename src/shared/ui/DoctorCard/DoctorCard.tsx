@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { Card, Avatar } from "antd";
 import styles from "./DoctorCard.module.scss";
 
@@ -9,23 +9,26 @@ interface DoctorCardProps {
   rating: number;
   image: string;
   onSelect?: () => void;
+  onMouseEnter?: () => void;
   selected?: boolean;
 }
 
-export const DoctorCard: React.FC<DoctorCardProps> = ({
+export const DoctorCard = memo<DoctorCardProps>(({
   name,
   country,
   countryFlag,
   rating,
   image,
   onSelect,
+  onMouseEnter,
   selected,
 }) => {
   return (
     <Card
       className={`${styles.card} ${selected ? styles.selected : ""}`}
       onClick={onSelect}
-      bordered={false}
+      onMouseEnter={onMouseEnter}
+      variant="borderless"
     >
       <div className={styles.content}>
         <Avatar size={50} src={image} />
@@ -41,4 +44,4 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({
       </div>
     </Card>
   );
-};
+});

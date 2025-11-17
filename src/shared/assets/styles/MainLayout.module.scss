@@ -1,25 +1,23 @@
 .container {
     min-height: 100vh;
     min-width: 100vw;
-    background-color: var(--tg-theme-bg-color, #f5f5f5);
-    color: var(--tg-theme-text-color, #000);
+    background-color: var(#f5f5f5);
+    color: var(#000);
     position: relative;
 }
 
 .content {
     padding-bottom: calc(84px + env(safe-area-inset-bottom));
     height: 100vh;
-    overflow-y: auto; // Разрешаем прокрутку
+    overflow-y: auto;
 
-    // Скрываем скроллбар для всех браузеров
-    -ms-overflow-style: none; /* IE и Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
-        display: none; /* Chrome, Safari и Opera */
+        display: none;
     }
 
-    // Для плавного скролла на iOS
     -webkit-overflow-scrolling: touch;
 }
 

@@ -12,7 +12,8 @@
 
 .uploadBox {
     width: 100%;
-    height: 100px;
+    min-height: 140px;
+    padding: 20px;
     border: 1.5px solid #93b0ff;
     border-radius: 14px;
     background-color: #eff2fb;
@@ -24,9 +25,9 @@
 
     &:hover {
         border-color: #6e8cff;
+        background-color: #e8ecf8;
     }
 
-    // важно: делаем внутренний .ant-upload флекс-контейнером
     :global(.ant-upload) {
         width: 100%;
         height: 100%;
@@ -34,6 +35,7 @@
         display: flex !important; /* 👈 добавляем */
         justify-content: center;
         align-items: center;
+        margin: 0 !important;
     }
 }
 
@@ -48,4 +50,27 @@
 .icon {
     font-size: 28px;
     color: #9babdd;
+}
+
+.avatarWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.avatar {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #93b0ff;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: #6e8cff;
+        transform: scale(1.05);
+    }
 }

@@ -12,7 +12,6 @@ export const CustomSelect = ({ options, defaultValue }: ICustomSelectProps) => {
       options={options}
       className={styles["custom-select"]}
       defaultValue={defaultValue}
-      bordered={false}
       variant="borderless"
       size="small"
     />

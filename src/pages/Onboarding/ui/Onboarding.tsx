@@ -4,12 +4,14 @@ import { CustomSelect } from "../../../shared/ui/CustomSelect/CustomSelect";
 import { useEffect } from "react";
 
 import styles from "../styles/Onboarding.module.scss";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
+import { Navigate } from "react-router";
 
 export const OnBoardingPage = () => {
   const { goTo } = useAppNavigation();
+  const { isLogin } = useAuth();
 
   useEffect(() => {
-    // Mark onboarding as seen when the user navigates away (component unmounts)
     return () => {
       try {
         localStorage.setItem("onboardingSeen", "true");
@@ -19,6 +21,9 @@ export const OnBoardingPage = () => {
     };
   }, []);
 
+  if (isLogin) {
+    return <Navigate to="/" replace />;
+  }
   return (
     <div className={styles["page"]}>
       <div className={styles["logo-container"]}>
@@ -43,14 +48,23 @@ export const OnBoardingPage = () => {
         />
       </div>
       <div className={styles.buttons}>
-        <button onClick={() => goTo("/login")} className={styles.login}>
+        <button
+          onClick={() => {
+            goTo("/login");
+          }}
+          className={styles.login}
+        >
           Войти
         </button>
         <div className={styles.registerGroup}>
           <button onClick={() => goTo("/register")} className={styles.register}>
             Регистрация
           </button>
-          <a href="#" className={styles.link}>
+          <a
+            href="#"
+            onClick={() => goTo("/registerDoc")}
+            className={styles.link}
+          >
             Я врач
           </a>
         </div>

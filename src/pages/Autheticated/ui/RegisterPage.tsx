@@ -1,95 +1,118 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import { Checkbox } from "antd";
-import { CustomInput } from "../../../shared/ui/CustomInput/CustomInput";
+import { Checkbox, message } from "antd";
 import styles from "../styles/AutheticatedPage.module.scss";
+import { useRegistration } from "../../../features/auth/hooks/useRegistration";
+import { useAppNavigation } from "../../../shared/hooks/useAppNavigation";
+import { IoIosArrowBack } from "react-icons/io";
+import "react-phone-input-2/lib/style.css";
 import "antd/dist/reset.css";
-const RegisterPage = () => {
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate("/");
+const RegisterPage = () => {
+  const navigate = useNavigate();
+  const { goTo, goBack } = useAppNavigation();
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    isSubmitting,
+    error,
+    user,
+    handleSubmit,
+  } = useRegistration();
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  const handleRegister = async () => {
+    if (!acceptedTerms) {
+      message.error("Необходимо принять условия использования");
+      return;
+    }
+
+    if (!phoneNumber || phoneNumber.length < 10) {
+      message.error("Пожалуйста, введите корректный номер телефона");
+      return;
+    }
+
+    const success = await handleSubmit();
+    if (success) {
+      message.success("Регистрация прошла успешно");
+      navigate("/");
+    } else {
+      message.error(error || "Ошибка при регистрации");
+    }
   };
 
+  if (user) {
+    navigate("/");
+    return null;
+  }
+
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>Регистрация</h1>
+    <div className={styles.pageContainer}>
+      <div className={styles.page}>
+        <div onClick={goBack} className={styles.backButton}>
+          <IoIosArrowBack />
+        </div>
+        <div className={styles.formContainer}>
+          <h1 className={styles.title}>Регистрация</h1>
 
-      {/* Телефон */}
-      <div className={styles.inputWrapper}>
-        <label>
-          Имя:
-          <CustomInput
-            type="password"
-            value={password}
-            placeholder="Введите имя"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
-          />
-        </label>
-      </div>
-      <div className={styles.inputWrapper}>
-        <label>
-          Номер телефона:
-          <PhoneInput
-            country={"kz"}
-            value={phone}
-            onChange={setPhone}
-            inputClass={styles.phoneInput}
-            containerClass={styles.phoneContainer}
-            buttonClass={styles.flagDropdown}
-            dropdownClass={styles.countryList}
-            preferredCountries={["kz", "by", "ru", "ua"]}
-            placeholder="+7 (000) 000-00-00"
-            inputProps={{
-              name: "phone",
-              required: true,
-            }}
-            enableSearch={true}
-            specialLabel={""}
-          />
-        </label>
-      </div>
+          <div className={styles.inputWrapper}>
+            <label>
+              Номер телефона:
+              <PhoneInput
+                country={"kz"}
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                inputClass={styles.phoneInput}
+                containerClass={styles.phoneContainer}
+                buttonClass={styles.flagDropdown}
+                dropdownClass={styles.countryList}
+                preferredCountries={["kz", "by", "ru", "ua"]}
+                placeholder="+7 (000) 000-00-00"
+                inputProps={{
+                  name: "phone",
+                  required: true,
+                  disabled: isSubmitting,
+                }}
+                enableSearch={true}
+                specialLabel={""}
+              />
+            </label>
+          </div>
 
-      {/* Пароль */}
-      <div className={styles.inputWrapper}>
-        <label>
-          Введите пароль:
-          <CustomInput
-            type="password"
-            value={password}
-            placeholder="Введите пароль"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
-          />
-        </label>
-        <a href="#" className={styles.forgotPassword}>
-          Забыли пароль?
-        </a>
+          <div className={styles.privacyWrapper}>
+            <Checkbox
+              className={styles.checkbox}
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              disabled={isSubmitting}
+            />
+            <p className={styles.privacyText}>
+              Я принимаю{" "}
+              <a href="#" className={styles.link}>
+                политику конфиденциальности
+              </a>{" "}
+              и{" "}
+              <a href="#" className={styles.link}>
+                правила пользования
+              </a>{" "}
+              приложением
+            </p>
+          </div>
+
+          <button
+            className={styles.loginButton}
+            onClick={handleRegister}
+            disabled={isSubmitting || !acceptedTerms}
+          >
+            {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
+          </button>
+          <a href="#" onClick={() => goTo("/login")} className={styles.link}>
+            войти
+          </a>
+        </div>
       </div>
-      <div className={styles.privacyWrapper}>
-        <Checkbox className={styles.checkbox} />
-        <p className={styles.privacyText}>
-          Я принимаю{" "}
-          <a href="#" className={styles.link}>
-            политику конфиденциальности
-          </a>{" "}
-          и{" "}
-          <a href="#" className={styles.link}>
-            правила пользования
-          </a>{" "}
-          приложением
-        </p>
-      </div>
-      <button className={styles.loginButton} onClick={handleLogin}>
-        Войти
-      </button>
     </div>
   );
 };

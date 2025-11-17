@@ -101,18 +101,23 @@
         font-size: 15px;
         color: #73767e;
     }
-    .empty {
-        margin-left: 15px;
-        font-size: 15px;
-        color: #73767e;
-        margin-right: 15px;
-    }
 
     .arrow {
         margin-right: 15px;
         color: #8a9eff;
         font-size: 14px;
     }
+}
+
+.categoryBlock {
+    margin-bottom: 8px;
+}
+
+.empty {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
 }
 
 .backButton {

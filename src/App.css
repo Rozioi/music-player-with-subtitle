@@ -1,54 +1,31 @@
-#root {
-    min-width: -webkit-fill-available;
-    /*margin: 0 auto;*/
-    /* padding: 2rem;*/
-    /*text-align: center;*/
-    overflow-x: hidden;
-    width: 100vw;
-}
-* {
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-}
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-*:focus-visible {
-    outline: none;
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
 }
 
-.logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-}
-.logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
+.loading-text {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 500;
+    animation: pulse 1.5s infinite;
 }
 
-@keyframes logo-spin {
-    from {
-        transform: rotate(0deg);
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
     }
-    to {
-        transform: rotate(360deg);
+    50% {
+        opacity: 1;
     }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-        animation: logo-spin infinite 20s linear;
+    100% {
+        opacity: 0.6;
     }
-}
-
-.card {
-    padding: 2em;
-}
-
-.read-the-docs {
-    color: #888;
 }
