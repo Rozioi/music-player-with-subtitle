@@ -9,6 +9,7 @@ import { apiClient } from "../../api/api";
 import { SuccessModal } from "../../shared/ui/Modal/Modal";
 import WebApp from "@twa-dev/sdk";
 import styles from "./styles/PaymentPage.module.scss";
+import { PaymentIcons } from "../../shared/ui/PaymentIcons/PaymentIcons";
 
 const { Title, Text } = Typography;
 
@@ -19,29 +20,48 @@ const PaymentPage: React.FC = () => {
   const { user } = useAuth();
   const doctorIdParam = searchParams.get("doctorId");
   const serviceType = searchParams.get("serviceType") || "consultation";
-  const analysisType = searchParams.get("analysisType");
 
   const [paymentMethod, setPaymentMethod] = useState<"balance" | "card">(
     "balance",
   );
-  const [balance] = useState(14000); // TODO: получать из API
+  const [balance, setBalance] = useState(0);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [loadingBalance, setLoadingBalance] = useState(true);
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCVC, setCardCVC] = useState("");
   const [cardName, setCardName] = useState("");
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [doctorData, setDoctorData] = useState<{
     name: string;
     price: number;
   } | null>(null);
 
+  // Загрузка данных
   useEffect(() => {
-    if (doctorIdParam) {
-      loadDoctorData();
+    if (doctorIdParam) loadDoctorData();
+    loadBalance();
+  }, [doctorIdParam, user]);
+
+  const loadBalance = async () => {
+    try {
+      setLoadingBalance(true);
+      const telegramId =
+        user?.telegramId ||
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
+      if (!telegramId) return;
+
+      const response = await apiClient.getBalance(telegramId);
+      if (response.success && response.data) {
+        setBalance(response.data.amount);
+      }
+    } catch (err) {
+      console.error("Failed to load balance:", err);
+    } finally {
+      setLoadingBalance(false);
     }
-  }, [doctorIdParam]);
+  };
 
   const loadDoctorData = async () => {
     if (!doctorIdParam) return;
@@ -62,68 +82,54 @@ const PaymentPage: React.FC = () => {
     }
   };
 
+  // Форматирование полей
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || "";
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return v;
-    }
+    return match.match(/.{1,4}/g)?.join(" ") || v;
   };
 
   const formatExpiry = (value: string) => {
     const v = value.replace(/\D/g, "");
-    if (v.length >= 2) {
-      return v.substring(0, 2) + "/" + v.substring(2, 4);
-    }
-    return v;
+    return v.length >= 2 ? v.substring(0, 2) + "/" + v.substring(2, 4) : v;
   };
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCardNumber(e.target.value);
-    setCardNumber(formatted);
+    setCardNumber(formatCardNumber(e.target.value));
   };
 
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatExpiry(e.target.value);
-    setCardExpiry(formatted);
+    setCardExpiry(formatExpiry(e.target.value));
   };
 
+  // Обработка платежа
   const handlePayment = async () => {
-    if (!doctorIdParam) {
-      message.error("ID врача не указан");
+    if (!doctorIdParam || !doctorData) {
+      messageApi.error("Данные для оплаты неполные");
       return;
     }
 
     const validDoctorId = String(doctorIdParam).trim();
     if (!validDoctorId || isNaN(Number(validDoctorId))) {
-      message.error("Неверный ID врача");
+      messageApi.error("Неверный ID врача");
       return;
     }
 
-    const amount = doctorData?.price || 0;
+    const amount = doctorData.price;
 
     if (paymentMethod === "card") {
       if (!cardNumber || !cardExpiry || !cardCVC || !cardName) {
-        message.error("Пожалуйста, заполните все поля карты");
+        messageApi.error("Заполните все поля карты");
         return;
       }
-
       if (cardNumber.replace(/\s/g, "").length < 16) {
-        message.error("Номер карты должен содержать 16 цифр");
+        messageApi.error("Номер карты должен содержать 16 цифр");
         return;
       }
-    } else if (paymentMethod === "balance") {
-      if (balance < amount) {
-        message.error("Недостаточно средств на балансе");
-        return;
-      }
+    } else if (paymentMethod === "balance" && balance < amount) {
+      messageApi.error("Недостаточно средств на балансе");
+      return;
     }
 
     setLoading(true);
@@ -134,9 +140,8 @@ const PaymentPage: React.FC = () => {
       const telegramId =
         user?.telegramId ||
         window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
-
       if (!telegramId) {
-        message.error("Не удалось определить пользователя");
+        messageApi.error("Не удалось определить пользователя");
         setLoading(false);
         return;
       }
@@ -149,60 +154,34 @@ const PaymentPage: React.FC = () => {
       });
 
       if (chatResponse.success) {
-        const inviteResponse = await apiClient.sendChatInvite(
-          telegramId,
-          Number(validDoctorId),
-        );
-
-        if (inviteResponse.success) {
-          setPaymentSuccess(true);
-          setIsModalOpen(true);
-        } else {
-          message.warning(
-            "Оплата прошла успешно, но не удалось отправить приглашение в чат",
-          );
-          setPaymentSuccess(true);
-          setIsModalOpen(true);
-        }
+        await apiClient.sendChatInvite(telegramId, Number(validDoctorId));
+        setIsModalOpen(true);
       } else {
-        message.error(chatResponse.error || "Ошибка при создании чата");
-        setLoading(false);
+        messageApi.error(chatResponse.error || "Ошибка при создании чата");
       }
     } catch (err) {
-      message.error("Ошибка при обработке платежа");
+      messageApi.error("Ошибка при обработке платежа");
+    } finally {
       setLoading(false);
     }
   };
 
   const handleGoToTelegramChat = () => {
-    try {
-      setIsModalOpen(false);
-
-      setTimeout(() => {
-        if (typeof WebApp !== "undefined" && WebApp.close) {
-          WebApp.close();
-        } else if (window.Telegram?.WebApp?.close) {
-          window.Telegram.WebApp.close();
-        }
-      }, 500);
-    } catch (error) {
-      console.error("Ошибка при закрытии мини-апп:", error);
-    }
+    setIsModalOpen(false);
+    setTimeout(() => {
+      WebApp?.close?.() || window.Telegram?.WebApp?.close?.();
+    }, 500);
   };
 
-  const getServiceName = () => {
-    if (serviceType === "analysis") {
-      return "Расшифровка анализов";
-    }
-    return "Консультация";
-  };
+  const getServiceName = () =>
+    serviceType === "analysis" ? "Расшифровка анализов" : "Консультация";
 
   return (
     <div className={styles.container}>
       <div onClick={goBack} className={styles.backButton}>
         <IoIosArrowBack />
       </div>
-
+      {contextHolder}
       <Card className={styles.card}>
         <Title level={3} className={styles.title}>
           Оплата услуги
@@ -248,6 +227,7 @@ const PaymentPage: React.FC = () => {
                   maxLength={19}
                   className={styles.input}
                 />
+                <PaymentIcons cardNumber={cardNumber} />
               </div>
 
               <div className={styles.row}>
