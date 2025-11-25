@@ -28,7 +28,9 @@ const { Title, Text } = Typography;
 const PersonalAccountPage: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [balance] = useState(14000);
+  const [balance, setBalance] = useState(0);
+  const [loadingBalance, setLoadingBalance] = useState(true);
+  const [messageApi, contextHolder] = message.useMessage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [card] = useState("Visa **** 9399");
@@ -88,12 +90,12 @@ const PersonalAccountPage: React.FC = () => {
     if (!doctorProfile?.id) return;
 
     if (editedConsultationFee < 0) {
-      message.error("Стоимость консультации не может быть отрицательной");
+      messageApi.error("Стоимость консультации не может быть отрицательной");
       return;
     }
 
     if (!editedDescription.trim() || editedDescription.trim().length < 10) {
-      message.error("Описание должно содержать минимум 10 символов");
+      messageApi.error("Описание должно содержать минимум 10 символов");
       return;
     }
 
@@ -106,14 +108,14 @@ const PersonalAccountPage: React.FC = () => {
       if (response.success && response.data) {
         setDoctorProfile(response.data);
         setIsEditing(false);
-        message.success("Профиль успешно обновлен");
+        messageApi.success("Профиль успешно обновлен");
       } else {
-        message.error(response.error || "Ошибка при обновлении профиля");
+        messageApi.error(response.error || "Ошибка при обновлении профиля");
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка при обновлении профиля";
-      message.error(errorMessage);
+        err instanceof Error ? err.messageApi : "Ошибка при обновлении профиля";
+      messageApi.error(errorMessage);
     }
   };
 
@@ -125,11 +127,11 @@ const PersonalAccountPage: React.FC = () => {
     setLogoutLoading(true);
     try {
       await logout();
-      message.success("Вы успешно вышли из аккаунта");
+      messageApi.success("Вы успешно вышли из аккаунта");
       setShowLogoutModal(false);
       navigate("/login");
     } catch (err) {
-      message.error("Ошибка при выходе из аккаунта");
+      messageApi.error("Ошибка при выходе из аккаунта");
     } finally {
       setLogoutLoading(false);
     }

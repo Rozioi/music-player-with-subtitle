@@ -20,6 +20,7 @@ const DoctorRegisterPage = () => {
   const { goBack } = useAppNavigation();
   const options = countryList().getData();
   const pageContainerRef = useRef<HTMLDivElement>(null);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -56,39 +57,39 @@ const DoctorRegisterPage = () => {
 
   const handleSubmit = async () => {
     if (!acceptedTerms) {
-      message.warning("Пожалуйста, примите условия использования");
+      messageApi.warning("Пожалуйста, примите условия использования");
       return;
     }
 
     if (!phoneNumber) {
-      message.error("Пожалуйста, введите номер телефона");
+      messageApi.error("Пожалуйста, введите номер телефона");
       return;
     }
 
     if (!doctorData.qualification) {
-      message.error("Пожалуйста, выберите категорию врача");
+      messageApi.error("Пожалуйста, выберите категорию врача");
       return;
     }
 
     if (!doctorData.country) {
-      message.error("Пожалуйста, выберите страну");
+      messageApi.error("Пожалуйста, выберите страну");
       return;
     }
 
     if (!doctorData.description || doctorData.description.trim().length < 10) {
-      message.error(
+      messageApi.error(
         "Пожалуйста, добавьте информацию о себе (минимум 10 символов)",
       );
       return;
     }
 
     if (doctorData.experience < 0 || doctorData.experience > 50) {
-      message.error("Стаж должен быть от 0 до 50 лет");
+      messageApi.error("Стаж должен быть от 0 до 50 лет");
       return;
     }
 
     if (doctorData.consultationFee < 0) {
-      message.error("Стоимость консультации не может быть отрицательной");
+      messageApi.error("Стоимость консультации не может быть отрицательной");
       return;
     }
 
@@ -104,14 +105,14 @@ const DoctorRegisterPage = () => {
       );
 
       if (!doctorResponse.success) {
-        message.error(
+        messageApi.error(
           doctorResponse.error || "Ошибка при создании профиля врача",
         );
         setIsSubmitting(false);
         return;
       }
 
-      message.success({
+      messageApi.success({
         content:
           "Регистрация успешно завершена! Перейдите на страницу входа и войдите в аккаунт.",
         duration: 5,
@@ -126,7 +127,7 @@ const DoctorRegisterPage = () => {
         err instanceof Error
           ? err.message
           : "Произошла ошибка при регистрации. Попробуйте еще раз.";
-      message.error(errorMessage);
+      messageApi.error(errorMessage);
       setIsSubmitting(false);
     }
   };

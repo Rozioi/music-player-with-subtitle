@@ -12,6 +12,8 @@ import "antd/dist/reset.css";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { goTo, goBack } = useAppNavigation();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const {
     phoneNumber,
     setPhoneNumber,
@@ -25,21 +27,21 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     if (!acceptedTerms) {
-      message.error("Необходимо принять условия использования");
+      messageApi.error("Необходимо принять условия использования");
       return;
     }
 
     if (!phoneNumber || phoneNumber.length < 10) {
-      message.error("Пожалуйста, введите корректный номер телефона");
+      messageApi.error("Пожалуйста, введите корректный номер телефона");
       return;
     }
 
     const success = await handleSubmit();
     if (success) {
-      message.success("Регистрация прошла успешно");
+      messageApi.success("Регистрация прошла успешно");
       navigate("/");
     } else {
-      message.error(error || "Ошибка при регистрации");
+      messageApi.error(error || "Ошибка при регистрации");
     }
   };
 

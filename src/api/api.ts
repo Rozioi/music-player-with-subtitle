@@ -1,12 +1,15 @@
 import axios, { type AxiosInstance } from "axios";
 import type {
   ApiResponse,
+  Balance,
   Chat,
   CreateChatRequest,
   CreateDoctorRequest,
+  CreatePaymentRequest,
   CreateUserRequest,
   DoctorInput,
   LoginRequest,
+  Payment,
   User,
 } from "./types";
 
@@ -418,6 +421,121 @@ class ApiClient {
         return {
           success: false,
           error: error.response?.data?.error || "Failed to send chat invite",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  async getBalance(telegramId?: string): Promise<ApiResponse<Balance>> {
+    try {
+      const params = telegramId ? { telegramId } : {};
+      const response = await api.get<{ success: boolean; data: Balance; error?: string }>(
+        "/balance",
+        { params },
+      );
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return { success: false, error: response.data.error || "Failed to get balance" };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get balance",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  async createPayment(
+    data: CreatePaymentRequest,
+  ): Promise<ApiResponse<Payment>> {
+    try {
+      const response = await api.post<{ success: boolean; data: Payment; error?: string }>(
+        "/payments",
+        data,
+      );
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return { success: false, error: response.data.error || "Failed to create payment" };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to create payment",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  async getPayments(telegramId?: string): Promise<ApiResponse<Payment[]>> {
+    try {
+      const params = telegramId ? { telegramId } : {};
+      const response = await api.get<{ success: boolean; data: Payment[]; error?: string }>(
+        "/payments",
+        { params },
+      );
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return { success: false, error: response.data.error || "Failed to get payments" };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get payments",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  async addToBalance(
+    amount: number,
+    telegramId?: string,
+  ): Promise<ApiResponse<Balance>> {
+    try {
+      const response = await api.post<{ success: boolean; data: Balance; error?: string }>(
+        "/balance/add",
+        { amount, telegramId },
+      );
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return { success: false, error: response.data.error || "Failed to add to balance" };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to add to balance",
         };
       }
       return {

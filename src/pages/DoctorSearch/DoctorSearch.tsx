@@ -40,6 +40,8 @@ const getCountryFlag = (country: string): string => {
 
 const DoctorSearchPage: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [search, setSearch] = useState("");
   const [doctors, setDoctors] = useState<DoctorCardData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,13 +81,13 @@ const DoctorSearchPage: React.FC = () => {
           const errorMsg =
             response.error || "Не удалось загрузить список врачей";
           setError(errorMsg);
-          message.error(errorMsg);
+          messageApi.error(errorMsg);
         }
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Ошибка при загрузке врачей";
         setError(errorMessage);
-        message.error(errorMessage);
+        messageApi.error(errorMessage);
       } finally {
         setLoading(false);
       }

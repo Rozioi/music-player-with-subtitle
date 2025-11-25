@@ -62,7 +62,7 @@ export const OnBoardingPage = () => {
           </button>
           <a
             href="#"
-            onClick={() => goTo("/registerDoc")}
+            onClick={() => goTo("/doctor-registration")}
             className={styles.link}
           >
             Я врач

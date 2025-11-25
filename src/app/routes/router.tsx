@@ -141,7 +141,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/registerDoc",
+    path: "/doctor-registration",
     element: (
       <Suspense fallback={<LoadingFallback />}>
         <DoctorRegisterPage />

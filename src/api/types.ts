@@ -116,3 +116,31 @@ export interface CreateChatRequest {
   amount: number;
   telegramId: string;
 }
+
+export interface Balance {
+  amount: number;
+  userId: number;
+}
+
+export type PaymentMethod = "BALANCE" | "CARD" | "BANK_TRANSFER";
+export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED" | "CANCELLED" | "REFUNDED";
+
+export interface Payment {
+  id: number;
+  userId: number;
+  chatId?: number;
+  amount: number;
+  paymentMethod: PaymentMethod;
+  status: PaymentStatus;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreatePaymentRequest {
+  amount: number;
+  paymentMethod: PaymentMethod;
+  chatId?: number;
+  description?: string;
+  telegramId?: string;
+}

@@ -12,6 +12,8 @@ import { message } from "antd";
 const LoginPage = () => {
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
   const navigate = useNavigate();
   const { loginFunc } = useAuth();
   const { goBack } = useAppNavigation();
@@ -25,7 +27,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     if (!phone || phone.length < 10) {
-      message.error("Пожалуйста, введите корректный номер телефона");
+      messageApi.error("Пожалуйста, введите корректный номер телефона");
       return;
     }
 
@@ -33,13 +35,13 @@ const LoginPage = () => {
     try {
       const response = await loginFunc(phone);
       if (response.success) {
-        message.success("Вход выполнен успешно");
+        messageApi.success("Вход выполнен успешно");
         navigate("/home");
       } else {
-        message.error(response.error || "Ошибка входа");
+        messageApi.error(response.error || "Ошибка входа");
       }
     } catch (err) {
-      message.error("Произошла ошибка при входе. Попробуйте еще раз.");
+      messageApi.error("Произошла ошибка при входе. Попробуйте еще раз.");
     } finally {
       setIsLoading(false);
     }
