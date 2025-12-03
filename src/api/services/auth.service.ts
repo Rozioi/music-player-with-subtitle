@@ -16,4 +16,7 @@ export const authService = {
     const response = await api.post<DoctorInput>("/doctors", data);
     return response.data;
   },
+  async deleteAccount(userId: string) {
+    await api.delete(`/users/${userId}`);
+  },
 };

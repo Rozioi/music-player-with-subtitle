@@ -36,6 +36,39 @@
 .topBar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.topBarRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.languageSelect {
+    :global(.ant-select-selector) {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: none !important;
+        backdrop-filter: blur(5px);
+        color: #fff !important;
+        min-width: 100px;
+    }
+
+    :global(.ant-select-selection-item) {
+        color: #fff !important;
+    }
+
+    :global(.ant-select-arrow) {
+        color: #fff !important;
+    }
+
+    :global(.ant-select-focused .ant-select-selector) {
+        background: rgba(255, 255, 255, 0.35) !important;
+    }
+
+    :global(.ant-select:hover .ant-select-selector) {
+        background: rgba(255, 255, 255, 0.35) !important;
+    }
 }
 
 .iconButton {

@@ -1,19 +1,28 @@
-export type Role = "PATIENT" | "DOCTOR" | "ADMIN";
+export interface LoginRequest {
+  phoneNumber: string;
+}
+
+export interface CreateUserRequest {
+  phoneNumber: string;
+  telegramId: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+}
 
 export interface User {
-  id?: number;
+  id: number;
   telegramId: string;
   username?: string;
   firstName?: string;
-  phoneNumber?: string;
   lastName?: string;
+  phoneNumber?: string;
   photoUrl?: string;
-  role: Role;
+  role: "PATIENT" | "DOCTOR" | "ADMIN";
   createdAt: Date;
 }
 
 export interface DoctorInput {
-  userId?: number;
   specialization: string;
   qualification: string;
   experience: number;
@@ -22,6 +31,7 @@ export interface DoctorInput {
   certificates: string[];
   consultationFee: number;
   country: string;
+  cardNumber?: string;
 }
 
 export interface DoctorProfile {
@@ -37,52 +47,22 @@ export interface DoctorProfile {
   country: string;
   consultationFee: number;
   isAvailable: boolean;
-  createdAt: Date;
-  updatedAt: Date;
   user?: User;
+  category?: string;
+  specialization?: string;
 }
 
 export interface TelegramInitData {
   query_id?: string;
   user?: {
     id: number;
-    first_name: string;
+    first_name?: string;
     last_name?: string;
     username?: string;
     language_code?: string;
-    photo_url?: string;
   };
-  auth_date: number;
-  hash: string;
-}
-
-export interface CreateUserRequest {
-  telegramData: TelegramInitData;
-  role: Role;
-  phoneNumber?: string;
-}
-
-export interface CreateDoctorRequest extends DoctorInput {
-  telegramData: TelegramInitData;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-
-interface TelegramData {
-  id: number;
-  username?: string;
-  first_name?: string;
-  last_name?: string;
-  photo_url?: string;
-}
-
-export interface LoginRequest {
-  telegramData: TelegramData;
-  phoneNumber: string;
+  auth_date?: number;
+  hash?: string;
 }
 
 export interface DoctorCardData {
@@ -92,6 +72,7 @@ export interface DoctorCardData {
   countryFlag: string;
   rating: number;
   image: string;
+
   category?: string;
   specialization?: string;
 }
@@ -101,7 +82,11 @@ export interface Chat {
   patientId: number;
   doctorId: number;
   patient?: User;
-  doctor?: User;
+  doctor?: User & {
+    doctorProfile?: {
+      id: number;
+    };
+  };
   telegramChatId?: string;
   serviceType: "consultation" | "analysis";
   amount: number;
@@ -143,4 +128,55 @@ export interface CreatePaymentRequest {
   chatId?: number;
   description?: string;
   telegramId?: string;
+}
+
+export type PDFDocumentType =
+  | "ANALYSIS_RESULT"
+  | "CONSULTATION_REPORT"
+  | "PRESCRIPTION"
+  | "MEDICAL_CERTIFICATE"
+  | "OTHER";
+
+export interface PDFDocument {
+  id: number;
+  filename: string;
+  originalName: string;
+  filePath: string;
+  fileSize: number;
+  mimeType: string;
+  documentType: PDFDocumentType;
+  userId?: number;
+  chatId?: number;
+  metadata?: Record<string, unknown>;
+  url?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Review {
+  id: number;
+  patientId: number;
+  doctorId: number;
+  doctorProfileId: number;
+  chatId?: number;
+  rating: number;
+  comment?: string;
+  patient?: User;
+  doctor?: User;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateReviewRequest {
+  doctorProfileId: number;
+  chatId?: number;
+  rating: number;
+  comment?: string;
+  telegramId: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
 }

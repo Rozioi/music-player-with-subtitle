@@ -6,10 +6,12 @@ import type {
   CreateChatRequest,
   CreateDoctorRequest,
   CreatePaymentRequest,
+  CreateReviewRequest,
   CreateUserRequest,
   DoctorInput,
   LoginRequest,
   Payment,
+  Review,
   User,
 } from "./types";
 
@@ -389,7 +391,7 @@ class ApiClient {
   }
 
   async sendChatInvite(
-    patientTelegramId: string,
+    patientId: string,
     doctorId: number,
   ): Promise<ApiResponse<{ success: boolean; message: string }>> {
     try {
@@ -398,7 +400,7 @@ class ApiClient {
         message: string;
         error?: string;
       }>("/chats/invite", {
-        patientTelegramId,
+        patientId,
         doctorId,
       });
 
@@ -433,17 +435,21 @@ class ApiClient {
   async getBalance(telegramId?: string): Promise<ApiResponse<Balance>> {
     try {
       const params = telegramId ? { telegramId } : {};
-      const response = await api.get<{ success: boolean; data: Balance; error?: string }>(
-        "/balance",
-        { params },
-      );
+      const response = await api.get<{
+        success: boolean;
+        data: Balance;
+        error?: string;
+      }>("/balance", { params });
       if (response.data.success && response.data.data) {
         return {
           success: true,
           data: response.data.data,
         };
       }
-      return { success: false, error: response.data.error || "Failed to get balance" };
+      return {
+        success: false,
+        error: response.data.error || "Failed to get balance",
+      };
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
@@ -462,17 +468,21 @@ class ApiClient {
     data: CreatePaymentRequest,
   ): Promise<ApiResponse<Payment>> {
     try {
-      const response = await api.post<{ success: boolean; data: Payment; error?: string }>(
-        "/payments",
-        data,
-      );
+      const response = await api.post<{
+        success: boolean;
+        data: Payment;
+        error?: string;
+      }>("/payments", data);
       if (response.data.success && response.data.data) {
         return {
           success: true,
           data: response.data.data,
         };
       }
-      return { success: false, error: response.data.error || "Failed to create payment" };
+      return {
+        success: false,
+        error: response.data.error || "Failed to create payment",
+      };
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
@@ -490,17 +500,21 @@ class ApiClient {
   async getPayments(telegramId?: string): Promise<ApiResponse<Payment[]>> {
     try {
       const params = telegramId ? { telegramId } : {};
-      const response = await api.get<{ success: boolean; data: Payment[]; error?: string }>(
-        "/payments",
-        { params },
-      );
+      const response = await api.get<{
+        success: boolean;
+        data: Payment[];
+        error?: string;
+      }>("/payments", { params });
       if (response.data.success && response.data.data) {
         return {
           success: true,
           data: response.data.data,
         };
       }
-      return { success: false, error: response.data.error || "Failed to get payments" };
+      return {
+        success: false,
+        error: response.data.error || "Failed to get payments",
+      };
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
@@ -520,22 +534,365 @@ class ApiClient {
     telegramId?: string,
   ): Promise<ApiResponse<Balance>> {
     try {
-      const response = await api.post<{ success: boolean; data: Balance; error?: string }>(
-        "/balance/add",
-        { amount, telegramId },
-      );
+      const response = await api.post<{
+        success: boolean;
+        data: Balance;
+        error?: string;
+      }>("/balance/add", { amount, telegramId });
       if (response.data.success && response.data.data) {
         return {
           success: true,
           data: response.data.data,
         };
       }
-      return { success: false, error: response.data.error || "Failed to add to balance" };
+      return {
+        success: false,
+        error: response.data.error || "Failed to add to balance",
+      };
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
           success: false,
           error: error.response?.data?.error || "Failed to add to balance",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Генерирует PDF документ
+   */
+  async generatePDF(
+    data: GeneratePDFRequest,
+  ): Promise<ApiResponse<PDFDocument>> {
+    try {
+      const response = await api.post<{
+        success: boolean;
+        data: PDFDocument;
+        error?: string;
+      }>("/pdf/generate", data);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to generate PDF",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to generate PDF",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Загружает PDF файл
+   */
+  async uploadPDF(data: UploadPDFRequest): Promise<ApiResponse<PDFDocument>> {
+    try {
+      const formData = new FormData();
+      formData.append("file", data.file);
+      formData.append("documentType", data.documentType);
+      if (data.userId) {
+        formData.append("userId", String(data.userId));
+      }
+      if (data.chatId) {
+        formData.append("chatId", String(data.chatId));
+      }
+      if (data.metadata) {
+        formData.append("metadata", JSON.stringify(data.metadata));
+      }
+
+      const response = await api.post<{
+        success: boolean;
+        data: PDFDocument;
+        error?: string;
+      }>("/pdf/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to upload PDF",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to upload PDF",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Получает PDF документ по ID
+   */
+  async getPDFDocument(id: number): Promise<ApiResponse<PDFDocument>> {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data: PDFDocument;
+        error?: string;
+      }>(`/pdf/${id}`);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to get PDF document",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get PDF document",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Получает URL для доступа к PDF файлу
+   */
+  getPDFFileUrl(id: number): string {
+    const baseUrl = api.defaults.baseURL?.replace("/api/v1", "") || "";
+    return `${baseUrl}/api/v1/pdf/${id}/file`;
+  }
+
+  /**
+   * Получает список PDF документов пользователя
+   */
+  async getPDFDocumentsByUser(
+    userId: number,
+  ): Promise<ApiResponse<PDFDocument[]>> {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data: PDFDocument[];
+        error?: string;
+      }>(`/pdf/user/${userId}`);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to get PDF documents",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get PDF documents",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Получает список PDF документов чата
+   */
+  async getPDFDocumentsByChat(
+    chatId: number,
+  ): Promise<ApiResponse<PDFDocument[]>> {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data: PDFDocument[];
+        error?: string;
+      }>(`/pdf/chat/${chatId}`);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to get PDF documents",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get PDF documents",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Удаляет PDF документ
+   */
+  async deletePDFDocument(id: number): Promise<ApiResponse<void>> {
+    try {
+      const response = await api.delete<{
+        success: boolean;
+        message?: string;
+        error?: string;
+      }>(`/pdf/${id}`);
+      if (response.data.success) {
+        return {
+          success: true,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to delete PDF document",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to delete PDF document",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Создает отзыв на врача
+   */
+  async createReview(data: CreateReviewRequest): Promise<ApiResponse<Review>> {
+    try {
+      const response = await api.post<{
+        success: boolean;
+        data?: Review;
+        error?: string;
+      }>("/reviews", data);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to create review",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to create review",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Получает отзывы на врача
+   */
+  async getReviewsByDoctor(
+    doctorProfileId: number,
+  ): Promise<ApiResponse<Review[]>> {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data?: Review[];
+        error?: string;
+      }>(`/reviews/doctor/${doctorProfileId}`);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to get reviews",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get reviews",
+        };
+      }
+      return {
+        success: false,
+        error: "Unknown error occurred",
+      };
+    }
+  }
+
+  /**
+   * Получает отзыв по ID чата
+   */
+  async getReviewByChat(chatId: number): Promise<ApiResponse<Review>> {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data?: Review;
+        error?: string;
+      }>(`/reviews/chat/${chatId}`);
+      if (response.data.success && response.data.data) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
+      }
+      return {
+        success: false,
+        error: response.data.error || "Failed to get review",
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || "Failed to get review",
         };
       }
       return {

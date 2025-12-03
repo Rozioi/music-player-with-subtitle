@@ -1,111 +1,105 @@
+import { useTranslation } from "react-i18next";
 import styles from "../styles/InfoBlock.module.scss";
 import { InfoWarningBlock } from "./InfoWarningBlock";
 import Slider from "./Slider";
 
 export const InfoBlock = () => {
+  const { t } = useTranslation();
+
   const SliderBlocks = [
     {
-      title: "Преимущества обращения в Doctor Chat:",
+      title: t("info.advantages.title"),
       data: [
         {
-          title: "Доступ к европейским стандартам медицины:",
+          title: t("info.advantages.europeanStandards.title"),
           points: [
-            "Консультации от квалифицированных врачей из стран Европы не покидая пределы вашей страны!",
-            "Высокие стандарты качества обслуживания и медицинские рекомендации.",
+            t("info.advantages.europeanStandards.point1"),
+            t("info.advantages.europeanStandards.point2"),
           ],
           image: "/images/advantages/1.png",
         },
         {
-          title: "Быстрота и удобство:",
+          title: t("info.advantages.speed.title"),
           points: [
-            "Возможность получить консультацию не выходя из дома.",
-            "Оперативный ответ — от минуты до часа. Формат онлайн «живая очередь».",
+            t("info.advantages.speed.point1"),
+            t("info.advantages.speed.point2"),
           ],
           image: "/images/advantages/2.png",
         },
         {
-          title: "Разнообразие каналов общения:",
-          points: [
-            "Возможность использовать текст, фото, аудио и видео форматы для общения с врачом.",
-          ],
+          title: t("info.advantages.channels.title"),
+          points: [t("info.advantages.channels.point1")],
           image: "/images/advantages/3.png",
         },
         {
-          title: "Конфиденциальность и безопасность:",
-          points: ["Гарантирована полная анонимность и защита ваших данных."],
+          title: t("info.advantages.privacy.title"),
+          points: [t("info.advantages.privacy.point1")],
           image: "/images/advantages/4.png",
         },
         {
-          title: "Безопасная альтернатива самодиагностике:",
-          points: [
-            "Получение профессионального совета вместо вредной «самолечения» с помощью интернета.",
-          ],
+          title: t("info.advantages.alternative.title"),
+          points: [t("info.advantages.alternative.point1")],
           image: "/images/advantages/5.png",
         },
         {
-          title: "Обратная связь и улучшение сервиса:",
-          points: [
-            "Возможность оставить отзыв и повлиять на улучшение сервиса.",
-          ],
+          title: t("info.advantages.feedback.title"),
+          points: [t("info.advantages.feedback.point1")],
           image: "/images/advantages/6.png",
         },
       ],
     },
     {
-      title: "Современные Проблемы Пациентов:",
+      title: t("info.problems.title"),
+
       data: [
         {
-          title: "Отсутствие доступа к качественным медицинским услугам:",
+          title: t("info.problems.access.title"),
           points: [
-            "Трудности в поиске квалифицированных специалистов в своем регионе",
-            "Долгое ожидание очереди на прием к врачу.",
+            t("info.problems.access.point1"),
+            t("info.problems.access.point2"),
           ],
           image: "/images/problems/1.png",
         },
         {
-          title: "Сомнения и потребность в дополнительной информации:",
+          title: t("info.problems.doubts.title"),
           points: [
-            "Неопределенность после предыдущего диагноза или лечения.",
-            "Необходимость услышать второе мнение.",
+            t("info.problems.doubts.point1"),
+            t("info.problems.doubts.point2"),
           ],
           image: "/images/problems/2.png",
         },
         {
-          title: "Страх и неуверенность в здоровье:",
-          points: [
-            "Непонимание результатов анализов и желательность консультации без стресса и спешки.",
-          ],
+          title: t("info.problems.fear.title"),
+          points: [t("info.problems.fear.point1")],
           image: "/images/problems/3.png",
         },
         {
-          title: "Время и логистические ограничения:",
+          title: t("info.problems.time.title"),
           points: [
-            "	Нехватка времени на посещение врача в офисе или больнице.",
-            "Находясь за границей, возникают сложности с доступом к местным медицинским услугам.",
+            t("info.problems.time.point1"),
+            t("info.problems.time.point2"),
           ],
           image: "/images/problems/4.png",
         },
         {
-          title: "Желание избежать ненужных визитов:",
+          title: t("info.problems.visits.title"),
           points: [
-            "	Потребность только в информационной поддержке.",
-            "Предпочтение получить консультацию быстро и без формальностей.",
+            t("info.problems.visits.point1"),
+            t("info.problems.visits.point2"),
           ],
           image: "/images/problems/5.png",
         },
         {
-          title: "Дискомфорт и стеснение:",
+          title: t("info.problems.discomfort.title"),
           points: [
-            "Неудобство или стеснительность при обсуждении личных вопросов здоровья лицом к лицу.",
-            "Предпочтение конфиденциальности и анонимности при взаимодействии с врачом",
+            t("info.problems.discomfort.point1"),
+            t("info.problems.discomfort.point2"),
           ],
           image: "/images/problems/6.png",
         },
         {
-          title: "Психологический комфорт:",
-          points: [
-            "Стресс и тревожность, вызванные ожиданием визита к врачу или неприятными визитами в медицинские учреждения.",
-          ],
+          title: t("info.problems.psychological.title"),
+          points: [t("info.problems.discomfort.point1")],
           image: "/images/problems/7.png",
         },
       ],

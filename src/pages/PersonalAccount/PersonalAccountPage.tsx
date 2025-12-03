@@ -15,6 +15,8 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { Select } from "antd";
 
 import styles from "./styles/PersonalAccountPage.module.scss";
 import ProfileUpload from "./ui/ProfileUpload";
@@ -28,12 +30,14 @@ const { Title, Text } = Typography;
 const PersonalAccountPage: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [balance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
   const [messageApi, contextHolder] = message.useMessage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [card] = useState("Visa **** 9399");
+  const [language, setLanguage] = useState<"ru" | "en">("ru");
   const [doctorProfile, setDoctorProfile] = useState<{
     id: number;
     consultationFee: number | string;
@@ -45,14 +49,24 @@ const PersonalAccountPage: React.FC = () => {
   const [editedDescription, setEditedDescription] = useState("");
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { goBack } = useAppNavigation();
+
+  useEffect(() => {
+    try {
+      const savedLang = (localStorage.getItem("lang") as "ru" | "en" | null) || "ru";
+      setLanguage(savedLang === "en" || savedLang === "ru" ? savedLang : "ru");
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
       const fullName =
         user.firstName && user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : user.firstName || user.lastName || user.username || "Пользователь";
+          : user.firstName || user.lastName || user.username || t("profile.user");
       setName(fullName);
       setPhone(user.phoneNumber || "");
 
@@ -65,13 +79,13 @@ const PersonalAccountPage: React.FC = () => {
         const fullName =
           telegramUser.first_name && telegramUser.last_name
             ? `${telegramUser.first_name} ${telegramUser.last_name}`
-            : telegramUser.first_name ||
+            :               telegramUser.first_name ||
               telegramUser.username ||
-              "Пользователь";
+              t("profile.user");
         setName(fullName);
       }
     }
-  }, [user]);
+  }, [user, t]);
 
   const loadDoctorProfile = async (userId: string | number) => {
     try {
@@ -90,12 +104,12 @@ const PersonalAccountPage: React.FC = () => {
     if (!doctorProfile?.id) return;
 
     if (editedConsultationFee < 0) {
-      messageApi.error("Стоимость консультации не может быть отрицательной");
+      messageApi.error(t("profile.consultationFeeError"));
       return;
     }
 
     if (!editedDescription.trim() || editedDescription.trim().length < 10) {
-      messageApi.error("Описание должно содержать минимум 10 символов");
+      messageApi.error(t("profile.descriptionError"));
       return;
     }
 
@@ -108,13 +122,13 @@ const PersonalAccountPage: React.FC = () => {
       if (response.success && response.data) {
         setDoctorProfile(response.data);
         setIsEditing(false);
-        messageApi.success("Профиль успешно обновлен");
+        messageApi.success(t("profile.profileUpdated"));
       } else {
-        messageApi.error(response.error || "Ошибка при обновлении профиля");
+        messageApi.error(response.error || t("profile.updateError"));
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.messageApi : "Ошибка при обновлении профиля";
+        err instanceof Error ? err.messageApi : t("profile.updateError");
       messageApi.error(errorMessage);
     }
   };
@@ -123,15 +137,32 @@ const PersonalAccountPage: React.FC = () => {
     setShowLogoutModal(true);
   };
 
+  const confirmDelete = async () => {
+    setLogoutLoading(true);
+    try {
+      await logout();
+      messageApi.success(t("profile.deleteSuccess"));
+      setShowLogoutModal(false);
+      navigate("/login");
+    } catch (err) {
+      messageApi.error(t("profile.deleteError"));
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+  const hadleDelete = () => {
+    setShowLogoutModal(true);
+  };
+
   const confirmLogout = async () => {
     setLogoutLoading(true);
     try {
       await logout();
-      messageApi.success("Вы успешно вышли из аккаунта");
+      messageApi.success(t("profile.logoutSuccess"));
       setShowLogoutModal(false);
       navigate("/login");
     } catch (err) {
-      messageApi.error("Ошибка при выходе из аккаунта");
+      messageApi.error(t("profile.logoutError"));
     } finally {
       setLogoutLoading(false);
     }
@@ -148,7 +179,7 @@ const PersonalAccountPage: React.FC = () => {
       </div>
       <Card className={styles.card}>
         <Title level={3} className={styles.title}>
-          Личный кабинет
+          {t("profile.title")}
         </Title>
 
         <div className={styles.balanceBox}>
@@ -157,39 +188,70 @@ const PersonalAccountPage: React.FC = () => {
               {balance.toLocaleString()} ₸
             </Text>
             <Button type="link" className={styles.topUp}>
-              Пополнить
+              {t("profile.topUp")}
             </Button>
           </div>
         </div>
 
         <div className={styles.field}>
-          <Text className={styles.label}>Имя</Text>
+          <Text className={styles.label}>{t("profile.language")}</Text>
+          <Select
+            value={language === "ru" ? "Русский" : "English"}
+            options={[
+              { value: "Русский", label: "Русский" },
+              { value: "English", label: "English" },
+            ]}
+            onChange={(value) => {
+              if (value === "Русский") {
+                setLanguage("ru");
+                try {
+                  localStorage.setItem("lang", "ru");
+                } catch {
+                  // ignore
+                }
+                i18n.changeLanguage("ru");
+              } else if (value === "English") {
+                setLanguage("en");
+                try {
+                  localStorage.setItem("lang", "en");
+                } catch {
+                  // ignore
+                }
+                i18n.changeLanguage("en");
+              }
+            }}
+            style={{ width: "100%" }}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <Text className={styles.label}>{t("profile.name")}</Text>
           <Input
             value={name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setName(e.target.value)
             }
-            suffix={<Button type="link">Изменить</Button>}
+            suffix={<Button type="link">{t("common.edit")}</Button>}
           />
         </div>
 
         <div className={styles.field}>
-          <Text className={styles.label}>Номер телефона</Text>
+          <Text className={styles.label}>{t("profile.phone")}</Text>
           <Input
             value={phone}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPhone(e.target.value)
             }
-            suffix={<Button type="link">Изменить</Button>}
+            suffix={<Button type="link">{t("common.edit")}</Button>}
           />
         </div>
 
         <div className={styles.field}>
-          <Text className={styles.label}>Карта оплаты</Text>
+          <Text className={styles.label}>{t("profile.card")}</Text>
           <Input
             value={card}
             disabled
-            suffix={<Button type="link">Изменить</Button>}
+            suffix={<Button type="link">{t("common.edit")}</Button>}
           />
         </div>
 
@@ -201,13 +263,13 @@ const PersonalAccountPage: React.FC = () => {
                 color="blue"
                 style={{ fontSize: "14px", padding: "4px 12px" }}
               >
-                Профиль врача
+                {t("profile.doctorProfile")}
               </Tag>
             </Divider>
 
             <div className={styles.field}>
               <Text className={styles.label}>
-                <MedicineBoxOutlined /> Специализация
+                <MedicineBoxOutlined /> {t("profile.specialization")}
               </Text>
               <Input
                 value={doctorProfile.specialization || ""}
@@ -218,7 +280,7 @@ const PersonalAccountPage: React.FC = () => {
 
             <div className={styles.field}>
               <Text className={styles.label}>
-                <DollarOutlined /> Стоимость консультации (₸)
+                <DollarOutlined /> {t("profile.consultationFee")}
               </Text>
               {isEditing ? (
                 <Input
@@ -229,7 +291,7 @@ const PersonalAccountPage: React.FC = () => {
                   }
                   suffix={
                     <Button type="link" onClick={handleSaveDoctorProfile}>
-                      Сохранить
+                      {t("common.save")}
                     </Button>
                   }
                 />
@@ -239,7 +301,7 @@ const PersonalAccountPage: React.FC = () => {
                   disabled
                   suffix={
                     <Button type="link" onClick={() => setIsEditing(true)}>
-                      Изменить
+                      {t("common.edit")}
                     </Button>
                   }
                 />
@@ -247,7 +309,7 @@ const PersonalAccountPage: React.FC = () => {
             </div>
 
             <div className={styles.field}>
-              <Text className={styles.label}>О себе</Text>
+              <Text className={styles.label}>{t("profile.about")}</Text>
               {isEditing ? (
                 <Input.TextArea
                   value={editedDescription}
@@ -276,7 +338,7 @@ const PersonalAccountPage: React.FC = () => {
                   onClick={handleSaveDoctorProfile}
                   style={{ flex: 1 }}
                 >
-                  Сохранить изменения
+                  {t("profile.saveChanges")}
                 </Button>
                 <Button
                   onClick={() => {
@@ -288,7 +350,7 @@ const PersonalAccountPage: React.FC = () => {
                   }}
                   style={{ flex: 1 }}
                 >
-                  Отмена
+                  {t("profile.cancel")}
                 </Button>
               </div>
             )}
@@ -297,12 +359,22 @@ const PersonalAccountPage: React.FC = () => {
 
         <ProfileUpload />
         <Button type="primary" block className={styles.saveBtn}>
-          Сохранить
+          {t("common.save")}
         </Button>
         <InfoLinks />
 
         <Divider style={{ margin: "24px 0" }} />
-
+        <Button
+          type="default"
+          danger
+          block
+          icon={<LogoutOutlined />}
+          className={styles.logoutButton}
+          onClick={hadleDelete}
+          loading={logoutLoading}
+        >
+          {t("profile.deleteAccount")}
+        </Button>
         <Button
           type="default"
           danger
@@ -312,22 +384,34 @@ const PersonalAccountPage: React.FC = () => {
           onClick={handleLogout}
           loading={logoutLoading}
         >
-          Выйти из аккаунта
+          {t("profile.logout")}
         </Button>
       </Card>
-
       <Modal
-        title="Выход из аккаунта"
-        open={showLogoutModal}
-        onOk={confirmLogout}
+        title={t("profile.deleteAccountTitle")}
+        open={showDeleteModal}
+        onOk={confirmDelete}
         onCancel={cancelLogout}
-        okText="Выйти"
-        cancelText="Отмена"
+        okText={t("common.delete")}
+        cancelText={t("common.cancel")}
         okButtonProps={{ danger: true, loading: logoutLoading }}
         confirmLoading={logoutLoading}
         centered
       >
-        <p>Вы уверены, что хотите выйти из аккаунта?</p>
+        <p>{t("profile.deleteAccountConfirm")}</p>
+      </Modal>
+      <Modal
+        title={t("profile.logoutTitle")}
+        open={showLogoutModal}
+        onOk={confirmLogout}
+        onCancel={cancelLogout}
+        okText={t("profile.logout")}
+        cancelText={t("common.cancel")}
+        okButtonProps={{ danger: true, loading: logoutLoading }}
+        confirmLoading={logoutLoading}
+        centered
+      >
+        <p>{t("profile.logoutConfirm")}</p>
       </Modal>
     </div>
   );

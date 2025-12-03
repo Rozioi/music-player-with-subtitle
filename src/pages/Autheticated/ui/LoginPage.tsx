@@ -8,6 +8,7 @@ import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useAppNavigation } from "../../../shared/hooks/useAppNavigation";
 import { IoIosArrowBack } from "react-icons/io";
 import { message } from "antd";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("");
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { loginFunc } = useAuth();
   const { goBack } = useAppNavigation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const savedPhone = localStorage.getItem("phoneNumber");
@@ -27,7 +29,9 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     if (!phone || phone.length < 10) {
-      messageApi.error("Пожалуйста, введите корректный номер телефона");
+      messageApi.error(
+        t("auth.phoneValidationError", "Пожалуйста, введите корректный номер телефона"),
+      );
       return;
     }
 
@@ -35,13 +39,22 @@ const LoginPage = () => {
     try {
       const response = await loginFunc(phone);
       if (response.success) {
-        messageApi.success("Вход выполнен успешно");
+        messageApi.success(
+          t("auth.loginSuccess", "Вход выполнен успешно"),
+        );
         navigate("/home");
       } else {
-        messageApi.error(response.error || "Ошибка входа");
+        messageApi.error(
+          response.error || t("auth.loginError", "Ошибка входа"),
+        );
       }
     } catch (err) {
-      messageApi.error("Произошла ошибка при входе. Попробуйте еще раз.");
+      messageApi.error(
+        t(
+          "auth.loginUnknownError",
+          "Произошла ошибка при входе. Попробуйте еще раз.",
+        ),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -49,16 +62,21 @@ const LoginPage = () => {
 
   return (
     <div className={styles.pageContainer}>
+      {contextHolder}
       <div className={styles.page}>
         <div onClick={goBack} className={styles.backButton}>
           <IoIosArrowBack />
         </div>
+        <div className={styles.loginCard}>
         <div className={styles.formContainer}>
-          <h1 className={styles.title}>Вход</h1>
+            <h1 className={styles.title}>{t("auth.loginTitle")}</h1>
+            <p className={styles.subtitle}>
+              {t("auth.loginSubtitle")}
+            </p>
 
           <div className={styles.inputWrapper}>
             <label>
-              Номер телефона:
+                {t("auth.phoneLabel")}
               <PhoneInput
                 country={"kz"}
                 value={phone}
@@ -84,8 +102,35 @@ const LoginPage = () => {
             onClick={handleLogin}
             disabled={isLoading}
           >
-            {isLoading ? "Вход..." : "Войти"}
+              {isLoading ? t("auth.loginLoading") : t("auth.loginButton")}
           </button>
+
+            <div className={styles.privacyWrapper}>
+              <span className={styles.privacyText}>
+                {t("auth.privacyNotice")}
+              </span>
+            </div>
+
+            <div className={styles.legalLinks}>
+              <a
+                href="/terms"
+                rel="noopener noreferrer"
+                className={styles.legalLink}
+              >
+                Пользовательское соглашение
+              </a>
+
+              <span className={styles.dot}>•</span>
+
+              <a
+                href="/privacy"
+                rel="noopener noreferrer"
+                className={styles.legalLink}
+              >
+                Политика конфиденциальности
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

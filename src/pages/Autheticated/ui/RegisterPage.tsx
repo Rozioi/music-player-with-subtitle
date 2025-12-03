@@ -8,6 +8,7 @@ import { useAppNavigation } from "../../../shared/hooks/useAppNavigation";
 import { IoIosArrowBack } from "react-icons/io";
 import "react-phone-input-2/lib/style.css";
 import "antd/dist/reset.css";
+import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -24,24 +25,39 @@ const RegisterPage = () => {
   } = useRegistration();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const { t } = useTranslation();
 
   const handleRegister = async () => {
     if (!acceptedTerms) {
-      messageApi.error("Необходимо принять условия использования");
+      messageApi.error(
+        t(
+          "auth.acceptTermsError",
+          "Необходимо принять условия использования",
+        ),
+      );
       return;
     }
 
     if (!phoneNumber || phoneNumber.length < 10) {
-      messageApi.error("Пожалуйста, введите корректный номер телефона");
+      messageApi.error(
+        t(
+          "auth.phoneValidationError",
+          "Пожалуйста, введите корректный номер телефона",
+        ),
+      );
       return;
     }
 
     const success = await handleSubmit();
     if (success) {
-      messageApi.success("Регистрация прошла успешно");
+      messageApi.success(
+        t("auth.registerSuccess", "Регистрация прошла успешно"),
+      );
       navigate("/");
     } else {
-      messageApi.error(error || "Ошибка при регистрации");
+      messageApi.error(
+        error || t("auth.registerError", "Ошибка при регистрации"),
+      );
     }
   };
 
@@ -52,16 +68,21 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.pageContainer}>
+      {contextHolder}
       <div className={styles.page}>
         <div onClick={goBack} className={styles.backButton}>
           <IoIosArrowBack />
         </div>
+        <div className={styles.loginCard}>
         <div className={styles.formContainer}>
-          <h1 className={styles.title}>Регистрация</h1>
+            <h1 className={styles.title}>{t("auth.registerTitle")}</h1>
+            <p className={styles.subtitle}>
+              {t("auth.registerSubtitle")}
+            </p>
 
           <div className={styles.inputWrapper}>
             <label>
-              Номер телефона:
+                {t("auth.phoneLabel")}
               <PhoneInput
                 country={"kz"}
                 value={phoneNumber}
@@ -91,15 +112,15 @@ const RegisterPage = () => {
               disabled={isSubmitting}
             />
             <p className={styles.privacyText}>
-              Я принимаю{" "}
+                {t("auth.acceptPrefix", "Я принимаю")}{" "}
               <a href="#" className={styles.link}>
-                политику конфиденциальности
+                  {t("auth.privacyLink", "политику конфиденциальности")}
               </a>{" "}
-              и{" "}
+                {t("auth.and", "и")}{" "}
               <a href="#" className={styles.link}>
-                правила пользования
+                  {t("auth.rulesLink", "правила пользования")}
               </a>{" "}
-              приложением
+                {t("auth.appSuffix", "приложением")}
             </p>
           </div>
 
@@ -108,11 +129,21 @@ const RegisterPage = () => {
             onClick={handleRegister}
             disabled={isSubmitting || !acceptedTerms}
           >
-            {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
+              {isSubmitting
+                ? t("auth.registerLoading")
+                : t("auth.registerButton")}
           </button>
-          <a href="#" onClick={() => goTo("/login")} className={styles.link}>
-            войти
+          <a 
+            href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              goTo("/login");
+            }} 
+            className={styles.link}
+          >
+              {t("auth.goToLogin")}
           </a>
+          </div>
         </div>
       </div>
     </div>

@@ -26,11 +26,10 @@ const AnalysisSelectionPage = lazy(
 const DoctorSearchPage = lazy(
   () => import("../../pages/DoctorSearch/DoctorSearch"),
 );
-const PersonalAccountPage = lazy(
-  () => import("../../pages/PersonalAccount/PersonalAccountPage"),
-);
-const RefundPolicyPage = lazy(
-  () => import("../../pages/PersonalAccount/RefundPolicyPage"),
+import PersonalAccountPage from "../../pages/PersonalAccount/PersonalAccountPage";
+
+const RefundDocumentPage = lazy(
+  () => import("../../pages/PersonalAccount/RefundDocumentPage"),
 );
 const MaintenancePage = lazy(
   () => import("../../pages/Maintenance/MaintenancePage"),
@@ -40,6 +39,8 @@ const ChatListPage = lazy(() => import("../../pages/ChatList/ChatListPage"));
 import { DoctorProfilePage } from "../../pages/DoctorProfile/DoctorProfilePage";
 import { ServerGuard } from "../ui/ServerGuard";
 import { PublicLayout } from "../../layouts/PublicLayout";
+// import InfoPage from "../../shared/ui/InfoPage/InfoPage";
+import PdfViewer from "../../shared/ui/InfoPage/InfoPage";
 // const DoctorProfilePage = lazy(
 //   () => import("../../pages/DoctorProfile/DoctorProfilePage"),
 // );
@@ -85,7 +86,7 @@ export const router = createBrowserRouter([
       { path: "payment", element: <PaymentPage /> },
       { path: "chat", element: <ChatListPage /> },
       { path: "profile", element: <PersonalAccountPage /> },
-      { path: "profile/:slug", element: <RefundPolicyPage /> },
+
       {
         path: "search/doctor/:id",
         element: (
@@ -116,6 +117,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  { path: ":slug", element: <RefundDocumentPage /> },
   {
     path: "/welcome",
     element: (
@@ -145,6 +147,14 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingFallback />}>
         <DoctorRegisterPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/info",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <PdfViewer fileUrl="a.pdf" />
       </Suspense>
     ),
   },

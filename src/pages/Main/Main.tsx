@@ -4,9 +4,11 @@ import EUGer from "../../shared/assets/images/EUGer.png";
 import styles from "./styles/Main.module.scss";
 import { InfoBlock } from "./ui/InfoBlock";
 import { useAppNavigation } from "../../shared/hooks/useAppNavigation";
+import { useTranslation } from "react-i18next";
 
 const Main = memo(() => {
   const { goTo } = useAppNavigation();
+  const { t } = useTranslation();
 
   const handleSearchClick = useCallback(() => {
     goTo("/search");
@@ -25,13 +27,11 @@ const Main = memo(() => {
 
       <div className={styles["text-container"]}>
         <div className={styles["text-title"]}>
-          <h1 className={styles.title}>Doctor chat</h1>
+          <h1 className={styles.title}>{t("main.title")}</h1>
           <img className={styles.flag} src={EUGer} alt="EUGer" />
         </div>
         <p className={styles.description}>
-          — мобильное приложение для онлайн-консультаций с квалифицированными
-          врачами из Германии и Европы. Задавайте вопросы в чате и получайте
-          рекомендации от специалистов.
+          {t("main.description")}
         </p>
       </div>
 
@@ -40,13 +40,13 @@ const Main = memo(() => {
           className={styles.primaryButton}
           onClick={handleSearchClick}
         >
-          Поиск специалиста
+          {t("main.searchSpecialist")}
         </button>
         <button
           className={styles.secondaryButton}
           onClick={handleAnalysesClick}
         >
-          Расшифровки анализов
+          {t("main.analysisDecoding")}
         </button>
       </div>
       <InfoBlock />

@@ -1,34 +1,88 @@
-import React from "react";
-import { Typography } from "antd";
-import ReactMarkdown from "react-markdown";
-import { IoIosArrowBack } from "react-icons/io";
+import { useState, useEffect, useMemo } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import { Typography, Spin } from "antd";
+import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { IoIosArrowBack } from "react-icons/io";
 import styles from "./InfoPage.module.scss";
 
-interface InfoPageProps {
-  title: string;
-  content: string;
-}
+pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+const { Title } = Typography;
 
-const InfoPage: React.FC<InfoPageProps> = ({ title, content }) => {
-  const { goBack } = useAppNavigation();
+export default function PdfViewer({
+  fileUrl,
+  title,
+}: {
+  fileUrl: string;
+  title: string;
+}) {
+  const [numPages, setNumPages] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [loading, setLoading] = useState(true);
+  const { goTo } = useAppNavigation();
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [fileUrl]);
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+    setLoading(false);
+  }
+  const docOptions = useMemo(() => ({ scale: 1.2 }), []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.pageContainer}>
       <div className={styles.header}>
-        <button onClick={goBack} className={styles.backButton}>
+        <button className={styles.backButton} onClick={() => goTo(-1)}>
           <IoIosArrowBack />
+          <span>Назад</span>
         </button>
-        <Typography.Title level={3} className={styles.title}>
+        <Title level={3} className={styles.title}>
           {title}
-        </Typography.Title>
+        </Title>
       </div>
 
-      <div className={styles.content}>
-        <ReactMarkdown>{content}</ReactMarkdown>
+      <div className={styles.viewer}>
+        {loading && (
+          <div className={styles.loading}>
+            <Spin size="large" tip="Загружаем документ..." />
+          </div>
+        )}
+
+        <Document
+          options={docOptions}
+          file={fileUrl}
+          onLoadSuccess={onDocumentLoadSuccess}
+        >
+          <Page
+            pageNumber={pageNumber}
+            width={typeof window !== "undefined" ? window.innerWidth - 40 : 800}
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+          />
+        </Document>
       </div>
+
+      {numPages > 1 && (
+        <div className={styles.pagination}>
+          {Array.from({ length: numPages }, (_, i) => {
+            const page = i + 1;
+            const isActive = page === pageNumber;
+            return (
+              <button
+                key={page}
+                onClick={() => setPageNumber(page)}
+                className={`${styles.pageButton} ${
+                  isActive ? styles.pageButtonActive : ""
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
-};
-
-export default InfoPage;
+}

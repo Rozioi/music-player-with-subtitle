@@ -1,0 +1,336 @@
+{
+  "onboarding": {
+    "title": "Your doctor is online",
+    "description": "Fast and convenient communication with doctors from <bold>Europe</bold> at any time.",
+    "login": "Log in",
+    "register": "Sign up",
+    "iAmDoctor": "I am a doctor"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Enter your phone number to continue. We use your Telegram account for secure authentication.",
+    "phoneLabel": "Phone number:",
+    "loginButton": "Log in",
+    "loginLoading": "Logging in...",
+    "privacyNotice": "We do not share your phone number with third parties and use it only to sign in.",
+    "registerTitle": "Sign up",
+    "registerSubtitle": "Create an account with your phone number to quickly get consultations from doctors.",
+    "registerButton": "Sign up",
+    "registerLoading": "Signing up...",
+    "goToLogin": "log in",
+    "acceptTerms": "I accept",
+    "privacyPolicy": "privacy policy",
+    "termsOfUse": "terms of use",
+    "and": "and",
+    "app": "application"
+  },
+  "payment": {
+    "title": "Service payment",
+    "methodLabel": "Payment method",
+    "methodCard": "Bank card",
+    "payButton": "Pay {{amount}} ₸",
+    "successTitle": "Payment was successful!",
+    "successText": "Payment was successful! Check your Telegram — we sent you a message with a button to open the chat with the doctor.",
+    "offerTitle": "Offer agreement",
+    "offerTextPrefix": "I agree with the terms of the",
+    "offerTextSuffix": "for the provision of services.",
+    "offerLink": "public offer",
+    "cardNumber": "Card number",
+    "cardExpiry": "Expiry date",
+    "cardCVC": "CVC",
+    "cardName": "Name on card",
+    "errors": {
+      "incompleteData": "Payment data is incomplete",
+      "invalidDoctorId": "Invalid doctor ID",
+      "invalidCardFields": "Fill in all card fields",
+      "invalidCardNumber": "Card number must contain 16 digits",
+      "invalidCardExpiry": "Invalid card expiry date",
+      "invalidCardCVC": "CVC must contain 3 digits",
+      "invalidCardName": "Enter name on card",
+      "unknownUser": "Failed to identify user",
+      "createChatError": "Error while creating chat",
+      "processError": "Error while processing payment",
+      "activeChatExists": "You already have an active chat with this doctor. Complete the current consultation before starting a new one."
+    }
+  },
+  "chats": {
+    "title": "Chats",
+    "myDoctors": "My doctors",
+    "myPatients": "My patients",
+    "empty": "You don't have any chats with doctors yet",
+    "emptyDoctor": "You don't have any patients yet",
+    "active": "Active",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "consultation": "Consultation",
+    "analysis": "Analysis interpretation",
+    "doctor": "Doctor",
+    "patient": "Patient",
+    "goToChat": "Go to chat",
+    "errors": {
+      "unknownUser": "Failed to identify user",
+      "loadError": "Failed to load chats",
+      "openError": "Failed to open chat in Telegram"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "chats": "Chats",
+    "profile": "Profile"
+  },
+  "doctor": {
+    "profile": {
+      "mainInfo": "Main information",
+      "experience": "experience",
+      "reviews": "reviews",
+      "price": "price",
+      "about": "About doctor",
+      "startChat": "Start chat",
+      "activeChatExists": "You already have an active chat with this doctor",
+      "specialty": "Specialty",
+      "rating": "Rating"
+    },
+    "search": {
+      "title": "Find a doctor",
+      "noResults": "No doctors found"
+    }
+  },
+  "analysis": {
+    "title": "Select an analysis and get an online interpretation:",
+    "selectDoctor": "Select a doctor:",
+    "payButton": "Pay",
+    "blood": "Complete blood count",
+    "bio": "Blood biochemistry",
+    "urine": "Urinalysis",
+    "stool": "Stool analysis (coprogram)",
+    "doctorsWithChats": "Doctors you have chats with:",
+    "noDoctorsWithChats": "You don't have any chats with doctors yet"
+  },
+  "review": {
+    "title": "Leave a review",
+    "rating": "Rating",
+    "comment": "Comment",
+    "optional": "optional",
+    "commentPlaceholder": "Leave your review about the doctor...",
+    "submit": "Submit",
+    "success": "Review successfully added",
+    "leaveReview": "Leave review",
+    "errors": {
+      "noRating": "Please select a rating",
+      "unknownUser": "Failed to identify user",
+      "createError": "Error creating review",
+      "doctorNotFound": "Failed to find doctor profile"
+    }
+  },
+  "common": {
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "profile": {
+    "title": "Personal Account",
+    "language": "Language",
+    "name": "Name",
+    "phone": "Phone Number",
+    "card": "Payment Card",
+    "topUp": "Top Up",
+    "doctorProfile": "Doctor Profile",
+    "specialization": "Specialization",
+    "consultationFee": "Consultation Fee (₸)",
+    "about": "About",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "deleteAccount": "Delete Account",
+    "logout": "Log Out",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountConfirm": "Are you sure you want to delete your account?",
+    "logoutTitle": "Log Out",
+    "logoutConfirm": "Are you sure you want to log out?",
+    "deleteSuccess": "Account successfully deleted",
+    "logoutSuccess": "Successfully logged out",
+    "deleteError": "Error deleting account",
+    "logoutError": "Error logging out",
+    "profileUpdated": "Profile successfully updated",
+    "updateError": "Error updating profile",
+    "consultationFeeError": "Consultation fee cannot be negative",
+    "descriptionError": "Description must contain at least 10 characters",
+    "user": "User",
+    "photo": "Profile Photo"
+  },
+  "doctorRegistration": {
+    "title": "Doctor Registration",
+    "phone": "Phone Number",
+    "experience": "What is your experience (years)?",
+    "experiencePlaceholder": "Enter years of experience",
+    "specialization": "Your Specialization",
+    "specializationPlaceholder": "Select specialization",
+    "qualification": "Doctor Category",
+    "qualificationPlaceholder": "Select category",
+    "education": "Education",
+    "educationPlaceholder": "Enter your education",
+    "description": "Add information about yourself",
+    "descriptionPlaceholder": "This will help you attract more patients and build trusting relationships",
+    "consultationFee": "Consultation Fee (₸)",
+    "consultationFeePlaceholder": "Enter consultation fee",
+    "country": "Select Country",
+    "countryPlaceholder": "Select country",
+    "submit": "Register",
+    "submitting": "Registering...",
+    "acceptTerms": "I accept",
+    "privacyPolicy": "privacy policy",
+    "termsOfUse": "terms of use",
+    "and": "and",
+    "app": "application",
+    "errors": {
+      "acceptTerms": "Please accept the terms of use",
+      "phoneRequired": "Please enter phone number",
+      "qualificationRequired": "Please select doctor category",
+      "countryRequired": "Please select country",
+      "descriptionRequired": "Please add information about yourself (minimum 10 characters)",
+      "experienceRange": "Experience must be between 0 and 50 years",
+      "consultationFeeNegative": "Consultation fee cannot be negative",
+      "createError": "Error creating doctor profile",
+      "registrationError": "An error occurred during registration. Please try again.",
+      "success": "Registration completed successfully! Go to the login page and sign in to your account."
+    },
+    "specializations": {
+      "therapist": "Therapist",
+      "pediatrician": "Pediatrician",
+      "surgeon": "Surgeon",
+      "dentist": "Dentist",
+      "cardiologist": "Cardiologist",
+      "gynecologist": "Gynecologist",
+      "ent": "ENT",
+      "neurologist": "Neurologist",
+      "ophthalmologist": "Ophthalmologist",
+      "psychiatrist": "Psychiatrist",
+      "dermatologist": "Dermatologist"
+    },
+    "qualifications": {
+      "first": "First Category Doctor",
+      "second": "Second Category Doctor",
+      "highest": "Highest Category Doctor",
+      "candidate": "Candidate of Medical Sciences",
+      "doctor": "Doctor of Medical Sciences"
+    }
+  },
+  "main": {
+    "title": "Doctor chat",
+    "description": "— mobile application for online consultations with qualified doctors from Germany and Europe. Ask questions in chat and get recommendations from specialists.",
+    "searchSpecialist": "Find Specialist",
+    "analysisDecoding": "Analysis Interpretation"
+  },
+  "info": {
+    "advantages": {
+      "title": "Benefits of using Doctor Chat:",
+      "europeanStandards": {
+        "title": "Access to European medical standards:",
+        "point1": "Consultations from qualified doctors from European countries without leaving your country!",
+        "point2": "High quality service standards and medical recommendations."
+      },
+      "speed": {
+        "title": "Speed and convenience:",
+        "point1": "Ability to get consultation without leaving home.",
+        "point2": "Quick response — from a minute to an hour. Online \"live queue\" format."
+      },
+      "channels": {
+        "title": "Variety of communication channels:",
+        "point1": "Ability to use text, photo, audio and video formats to communicate with the doctor."
+      },
+      "privacy": {
+        "title": "Confidentiality and security:",
+        "point1": "Full anonymity and protection of your data is guaranteed."
+      },
+      "alternative": {
+        "title": "Safe alternative to self-diagnosis:",
+        "point1": "Getting professional advice instead of harmful \"self-treatment\" using the internet."
+      },
+      "feedback": {
+        "title": "Feedback and service improvement:",
+        "point1": "Ability to leave a review and influence service improvement."
+      }
+    },
+    "problems": {
+      "title": "Modern Patient Problems:",
+      "access": {
+        "title": "Lack of access to quality medical services:",
+        "point1": "Difficulties finding qualified specialists in your region",
+        "point2": "Long waiting time for doctor appointment."
+      },
+      "doubts": {
+        "title": "Doubts and need for additional information:",
+        "point1": "Uncertainty after previous diagnosis or treatment.",
+        "point2": "Need to hear a second opinion."
+      },
+      "fear": {
+        "title": "Fear and uncertainty about health:",
+        "point1": "Not understanding test results and desiring consultation without stress and rush."
+      },
+      "time": {
+        "title": "Time and logistical constraints:",
+        "point1": "Lack of time to visit a doctor at the office or hospital.",
+        "point2": "When abroad, there are difficulties accessing local medical services."
+      },
+      "visits": {
+        "title": "Desire to avoid unnecessary visits:",
+        "point1": "Need only for informational support.",
+        "point2": "Preference to get consultation quickly and without formalities."
+      },
+      "discomfort": {
+        "title": "Discomfort and embarrassment:",
+        "point1": "Inconvenience or shyness when discussing personal health issues face to face.",
+        "point2": "Preference for confidentiality and anonymity when interacting with a doctor"
+      },
+      "psychological": {
+        "title": "Psychological comfort:",
+        "point1": "Stress and anxiety caused by waiting for a doctor visit or unpleasant visits to medical facilities."
+      }
+    },
+    "warning": {
+      "title": "Important!",
+      "text1": "The legislation of the RK does not provide for prescribing prescription drugs, prescribing a course of treatment and making a diagnosis during an online consultation. For this, you need to make an appointment for an in-person visit.",
+      "text2": "The consultation is informational, not medical.",
+      "emergency": "In case of emergency, call an ambulance at 112!"
+    }
+  },
+  "profileUpload": {
+    "label": "Profile Photo",
+    "errors": {
+      "fileSize": "File size must not exceed 5MB",
+      "fileType": "Please select an image",
+      "unknownUser": "Failed to identify user",
+      "uploadError": "Error uploading file",
+      "updateError": "Error updating profile",
+      "generalError": "An error occurred while uploading the photo"
+    },
+    "success": "Photo uploaded successfully"
+  },
+  "doctorProfilePage": {
+    "loading": "Loading doctor profile...",
+    "errors": {
+      "invalidSlug": "Invalid doctor profile link format",
+      "noId": "Doctor ID not specified",
+      "notFound": "Doctor not found",
+      "loadError": "Error loading doctor data",
+      "checkChatError": "Error checking active chat"
+    },
+    "defaults": {
+      "doctor": "Doctor",
+      "specialist": "Specialist",
+      "noInfo": "Doctor information is missing"
+    },
+    "experience": {
+      "year": "year",
+      "years2_4": "years",
+      "years5plus": "years"
+    }
+  }
+}
+

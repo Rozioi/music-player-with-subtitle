@@ -1,25 +1,28 @@
 import { NavLink, useLocation } from "react-router";
 import styles from "./NavBottomPanel.module.scss";
+import { useTranslation } from "react-i18next";
 
 import { GoHomeFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
-// import { PiChatCircleTextFill } from "react-icons/pi";
+import { PiChatCircleTextFill } from "react-icons/pi";
 import { BsFillPersonFill } from "react-icons/bs";
 
 // Предзагрузка компонентов при наведении
 const preloadMain = () => import("../../../pages/Main/Main");
 const preloadSearch = () => import("../../../pages/DoctorSearch/DoctorSearch");
+const preloadChats = () => import("../../../pages/ChatList/ChatListPage");
 const preloadProfile = () => import("../../../pages/PersonalAccount/PersonalAccountPage");
 
 export const NavBottomPanel = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const { t } = useTranslation();
 
   const items = [
-    { path: "/home", label: "Главная", icon: <GoHomeFill /> },
-    { path: "/search", label: "Поиск", icon: <IoSearch /> },
-    // { path: "/chat", label: "Чат", icon: <PiChatCircleTextFill /> },
-    { path: "/profile", label: "Профиль", icon: <BsFillPersonFill /> },
+    { path: "/home", label: t("nav.home"), icon: <GoHomeFill /> },
+    { path: "/search", label: t("nav.search"), icon: <IoSearch /> },
+    { path: "/chat", label: t("nav.chats"), icon: <PiChatCircleTextFill /> },
+    { path: "/profile", label: t("nav.profile"), icon: <BsFillPersonFill /> },
   ];
 
   const isItemActive = (itemPath: string) => {
@@ -39,6 +42,10 @@ export const NavBottomPanel = () => {
       );
     }
 
+    if (itemPath === "/chat") {
+      return pathname === "/chat" || pathname.startsWith("/chat/");
+    }
+
     if (itemPath === "/profile") {
       // /profile and /profile/:slug
       return pathname === "/profile" || pathname.startsWith("/profile/");
@@ -54,6 +61,8 @@ export const NavBottomPanel = () => {
       preloadMain();
     } else if (path === "/search") {
       preloadSearch();
+    } else if (path === "/chat") {
+      preloadChats();
     } else if (path === "/profile") {
       preloadProfile();
     }

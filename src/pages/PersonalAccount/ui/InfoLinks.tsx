@@ -1,29 +1,31 @@
 import React from "react";
 import styles from "../styles/InfoLinks.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useAppNavigation } from "../../../shared/hooks/useAppNavigation";
+import { useNavigate } from "react-router";
 
 const InfoLinks: React.FC = () => {
+  const navigate = useNavigate();
+
   const links = [
-    { label: "Условия возврата", icon: <MdArrowForwardIos />, link: "refund" },
+    {
+      label: "Как происходит получение товара",
+      icon: <MdArrowForwardIos />,
+      link: "delivery",
+    },
     {
       label: "Как происходит оплата",
       icon: <MdArrowForwardIos />,
-      link: "payment",
+      link: "paymentProc",
     },
-    {
-      label: "Обратная связь",
-      icon: <MdArrowForwardIos />,
-      link: "connection",
-    },
+    { label: "Обратная связь", icon: <MdArrowForwardIos />, link: "contacts" },
   ];
-  const { goTo } = useAppNavigation();
+
   return (
     <div className={styles.linksWrapper}>
       {links.map((item, index) => (
         <button
           key={index}
-          onClick={() => goTo(item.link)}
+          onClick={() => navigate(`/${item.link}`)} // переход на /:slug
           className={styles.linkButton}
         >
           <span className={styles.text}>{item.label}</span>
@@ -33,5 +35,4 @@ const InfoLinks: React.FC = () => {
     </div>
   );
 };
-
 export default InfoLinks;

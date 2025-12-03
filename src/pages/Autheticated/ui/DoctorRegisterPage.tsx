@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { Input, Select, Upload, Button, Checkbox, message } from "antd";
-import { CameraOutlined } from "@ant-design/icons";
+import { Input, Select, Button, Checkbox, message } from "antd";
 import PhoneInput from "react-phone-input-2";
 import SelectCountry from "react-select";
 import countryList from "react-select-country-list";
+import { useTranslation } from "react-i18next";
 import "react-phone-input-2/lib/style.css";
 import "antd/dist/reset.css";
 import styles from "../styles/DoctorRegisterPage.module.scss";
@@ -18,6 +18,7 @@ const { TextArea } = Input;
 const DoctorRegisterPage = () => {
   const navigate = useNavigate();
   const { goBack } = useAppNavigation();
+  const { t } = useTranslation();
   const options = countryList().getData();
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -39,8 +40,6 @@ const DoctorRegisterPage = () => {
 
   const { createDoctor } = useAuthReq();
 
-  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
-
   useEffect(() => {
     // Небольшая задержка для гарантии, что DOM полностью загружен
   }, []);
@@ -49,47 +48,39 @@ const DoctorRegisterPage = () => {
     setDoctorData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePhotoUpload = (file: File) => {
-    const fileUrl = URL.createObjectURL(file);
-    setProfilePhoto(fileUrl);
-    return false;
-  };
-
   const handleSubmit = async () => {
     if (!acceptedTerms) {
-      messageApi.warning("Пожалуйста, примите условия использования");
+      messageApi.warning(t("doctorRegistration.errors.acceptTerms"));
       return;
     }
 
     if (!phoneNumber) {
-      messageApi.error("Пожалуйста, введите номер телефона");
+      messageApi.error(t("doctorRegistration.errors.phoneRequired"));
       return;
     }
 
     if (!doctorData.qualification) {
-      messageApi.error("Пожалуйста, выберите категорию врача");
+      messageApi.error(t("doctorRegistration.errors.qualificationRequired"));
       return;
     }
 
     if (!doctorData.country) {
-      messageApi.error("Пожалуйста, выберите страну");
+      messageApi.error(t("doctorRegistration.errors.countryRequired"));
       return;
     }
 
     if (!doctorData.description || doctorData.description.trim().length < 10) {
-      messageApi.error(
-        "Пожалуйста, добавьте информацию о себе (минимум 10 символов)",
-      );
+      messageApi.error(t("doctorRegistration.errors.descriptionRequired"));
       return;
     }
 
     if (doctorData.experience < 0 || doctorData.experience > 50) {
-      messageApi.error("Стаж должен быть от 0 до 50 лет");
+      messageApi.error(t("doctorRegistration.errors.experienceRange"));
       return;
     }
 
     if (doctorData.consultationFee < 0) {
-      messageApi.error("Стоимость консультации не может быть отрицательной");
+      messageApi.error(t("doctorRegistration.errors.consultationFeeNegative"));
       return;
     }
 
@@ -106,15 +97,14 @@ const DoctorRegisterPage = () => {
 
       if (!doctorResponse.success) {
         messageApi.error(
-          doctorResponse.error || "Ошибка при создании профиля врача",
+          doctorResponse.error || t("doctorRegistration.errors.createError"),
         );
         setIsSubmitting(false);
         return;
       }
 
       messageApi.success({
-        content:
-          "Регистрация успешно завершена! Перейдите на страницу входа и войдите в аккаунт.",
+        content: t("doctorRegistration.errors.success"),
         duration: 5,
       });
 
@@ -126,7 +116,7 @@ const DoctorRegisterPage = () => {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : "Произошла ошибка при регистрации. Попробуйте еще раз.";
+          : t("doctorRegistration.errors.registrationError");
       messageApi.error(errorMessage);
       setIsSubmitting(false);
     }
@@ -140,10 +130,10 @@ const DoctorRegisterPage = () => {
         </div>
 
         <div className={styles.formContainer}>
-          <h1 className={styles.title}>Регистрация врача</h1>
+          <h1 className={styles.title}>{t("doctorRegistration.title")}</h1>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Номер телефона</label>
+            <label className={styles.label}>{t("doctorRegistration.phone")}</label>
             <PhoneInput
               country={"kz"}
               value={phoneNumber}
@@ -158,10 +148,10 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Какой у вас стаж (лет)?</label>
+            <label className={styles.label}>{t("doctorRegistration.experience")}</label>
             <Input
               type="number"
-              placeholder="Введите количество лет стажа"
+              placeholder={t("doctorRegistration.experiencePlaceholder")}
               className={styles.input}
               min={0}
               max={50}
@@ -174,9 +164,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Ваша специализация</label>
+            <label className={styles.label}>{t("doctorRegistration.specialization")}</label>
             <Select
-              placeholder="Выберите специализацию"
+              placeholder={t("doctorRegistration.specializationPlaceholder")}
               className={styles.select}
               onChange={(val) => {
                 handleChange("specialization", val);
@@ -184,49 +174,49 @@ const DoctorRegisterPage = () => {
               }}
               value={doctorData.specialization || undefined}
               options={[
-                { value: "Терапевт", label: "Терапевт" },
-                { value: "Педиатр", label: "Педиатр" },
-                { value: "Хирург", label: "Хирург" },
-                { value: "Стоматолог", label: "Стоматолог" },
-                { value: "Кардиолог", label: "Кардиолог" },
-                { value: "Гинеколог", label: "Гинеколог" },
-                { value: "ЛОР", label: "ЛОР" },
-                { value: "Невролог", label: "Невролог" },
-                { value: "Офтальмолог", label: "Офтальмолог" },
-                { value: "Психиатр", label: "Психиатр" },
-                { value: "Дерматолог", label: "Дерматолог" },
+                { value: "Терапевт", label: t("doctorRegistration.specializations.therapist") },
+                { value: "Педиатр", label: t("doctorRegistration.specializations.pediatrician") },
+                { value: "Хирург", label: t("doctorRegistration.specializations.surgeon") },
+                { value: "Стоматолог", label: t("doctorRegistration.specializations.dentist") },
+                { value: "Кардиолог", label: t("doctorRegistration.specializations.cardiologist") },
+                { value: "Гинеколог", label: t("doctorRegistration.specializations.gynecologist") },
+                { value: "ЛОР", label: t("doctorRegistration.specializations.ent") },
+                { value: "Невролог", label: t("doctorRegistration.specializations.neurologist") },
+                { value: "Офтальмолог", label: t("doctorRegistration.specializations.ophthalmologist") },
+                { value: "Психиатр", label: t("doctorRegistration.specializations.psychiatrist") },
+                { value: "Дерматолог", label: t("doctorRegistration.specializations.dermatologist") },
               ]}
               disabled={isSubmitting}
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Категория врача</label>
+            <label className={styles.label}>{t("doctorRegistration.qualification")}</label>
             <Select
-              placeholder="Выберите категорию"
+              placeholder={t("doctorRegistration.qualificationPlaceholder")}
               className={styles.select}
               onChange={(val) => handleChange("qualification", val)}
               value={doctorData.qualification || undefined}
               options={[
                 {
                   value: "Врач первой категории",
-                  label: "Врач первой категории",
+                  label: t("doctorRegistration.qualifications.first"),
                 },
                 {
                   value: "Врач второй категории",
-                  label: "Врач второй категории",
+                  label: t("doctorRegistration.qualifications.second"),
                 },
                 {
                   value: "Врач высшей категории",
-                  label: "Врач высшей категории",
+                  label: t("doctorRegistration.qualifications.highest"),
                 },
                 {
                   value: "Кандидат медицинских наук",
-                  label: "Кандидат медицинских наук",
+                  label: t("doctorRegistration.qualifications.candidate"),
                 },
                 {
                   value: "Доктор медицинских наук",
-                  label: "Доктор медицинских наук",
+                  label: t("doctorRegistration.qualifications.doctor"),
                 },
               ]}
               disabled={isSubmitting}
@@ -234,9 +224,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Образование</label>
+            <label className={styles.label}>{t("doctorRegistration.education")}</label>
             <Input
-              placeholder="Введите ваше образование"
+              placeholder={t("doctorRegistration.educationPlaceholder")}
               className={styles.input}
               value={doctorData.education}
               onChange={(e) => handleChange("education", e.target.value)}
@@ -245,9 +235,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Добавьте информацию о себе</label>
+            <label className={styles.label}>{t("doctorRegistration.description")}</label>
             <TextArea
-              placeholder="Это поможет вам привлекать больше пациентов и выстраивать доверительные отношения"
+              placeholder={t("doctorRegistration.descriptionPlaceholder")}
               rows={4}
               className={styles.textarea}
               value={doctorData.description}
@@ -257,10 +247,10 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Стоимость консультации (₸)</label>
+            <label className={styles.label}>{t("doctorRegistration.consultationFee")}</label>
             <Input
               type="number"
-              placeholder="Введите стоимость консультации"
+              placeholder={t("doctorRegistration.consultationFeePlaceholder")}
               className={styles.input}
               min={0}
               value={doctorData.consultationFee || ""}
@@ -272,32 +262,10 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Добавьте фотографию профиля</label>
-            <Upload
-              beforeUpload={handlePhotoUpload}
-              showUploadList={false}
-              accept="image/*"
-              disabled={isSubmitting}
-            >
-              <div className={styles.photoUploadBox}>
-                {profilePhoto ? (
-                  <img
-                    src={profilePhoto}
-                    alt="profile"
-                    className={styles.photoPreview}
-                  />
-                ) : (
-                  <CameraOutlined className={styles.cameraIcon} />
-                )}
-              </div>
-            </Upload>
-          </div>
-
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Выберите страну</label>
+            <label className={styles.label}>{t("doctorRegistration.country")}</label>
             <SelectCountry
               options={options}
-              placeholder="Выберите страну"
+              placeholder={t("doctorRegistration.countryPlaceholder")}
               classNamePrefix="country-select"
               formatOptionLabel={(option) => (
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -355,15 +323,15 @@ const DoctorRegisterPage = () => {
               disabled={isSubmitting}
             />
             <p className={styles.privacyText}>
-              Я принимаю{" "}
+              {t("doctorRegistration.acceptTerms")}{" "}
               <a href="#" className={styles.link}>
-                политику конфиденциальности
+                {t("doctorRegistration.privacyPolicy")}
               </a>{" "}
-              и{" "}
+              {t("doctorRegistration.and")}{" "}
               <a href="#" className={styles.link}>
-                правила пользования
+                {t("doctorRegistration.termsOfUse")}
               </a>{" "}
-              приложением
+              {t("doctorRegistration.app")}
             </p>
           </div>
 
@@ -375,7 +343,7 @@ const DoctorRegisterPage = () => {
             loading={isSubmitting}
             block
           >
-            {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
+            {isSubmitting ? t("doctorRegistration.submitting") : t("doctorRegistration.submit")}
           </Button>
         </div>
       </div>

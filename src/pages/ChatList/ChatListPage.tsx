@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { List, Avatar, Card, Typography, Spin, message } from "antd";
-import { MessageOutlined } from "@ant-design/icons";
+import { List, Avatar, Card, Typography, Spin, message, Button } from "antd";
+import { MessageOutlined, StarOutlined } from "@ant-design/icons";
 import { IoIosArrowBack } from "react-icons/io";
 import { useAppNavigation } from "../../shared/hooks/useAppNavigation";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { apiClient } from "../../api/api";
-import type { Chat } from "../../api/types";
+import type { Chat, Review } from "../../api/types";
 import WebApp from "@twa-dev/sdk";
 import styles from "./styles/ChatListPage.module.scss";
+import { useTranslation } from "react-i18next";
+import { ReviewModal } from "../../shared/ui/ReviewModal/ReviewModal";
 
 const { Title, Text } = Typography;
 
 const ChatListPage: React.FC = () => {
   const { goBack } = useAppNavigation();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [reviews, setReviews] = useState<Record<number, Review>>({});
 
   useEffect(() => {
     loadChats();
@@ -29,19 +35,38 @@ const ChatListPage: React.FC = () => {
         window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
 
       if (!telegramId) {
-        message.error("Не удалось определить пользователя");
+        message.error(t("chats.errors.unknownUser", "Не удалось определить пользователя"));
         setLoading(false);
         return;
       }
 
       const response = await apiClient.getChats(telegramId);
       if (response.success && response.data) {
-        setChats(response.data);
+        // Показываем активные и завершенные чаты (для возможности оставить отзыв)
+        const visibleChats = response.data.filter(
+          (chat) => chat.status === "ACTIVE" || chat.status === "COMPLETED",
+        );
+        setChats(visibleChats);
+
+        // Загружаем отзывы для завершенных чатов
+        const completedChats = response.data.filter(
+          (chat) => chat.status === "COMPLETED",
+        );
+        for (const chat of completedChats) {
+          if (chat.id) {
+            const reviewResponse = await apiClient.getReviewByChat(chat.id);
+            if (reviewResponse.success && reviewResponse.data) {
+              setReviews((prev: Record<number, Review>) => ({ ...prev, [chat.id]: reviewResponse.data! }));
+            }
+          }
+        }
       } else {
-        message.error(response.error || "Не удалось загрузить чаты");
+        message.error(
+          response.error || t("chats.errors.loadError", "Не удалось загрузить чаты"),
+        );
       }
     } catch (err) {
-      message.error("Ошибка при загрузке чатов");
+      message.error(t("chats.errors.loadError", "Ошибка при загрузке чатов"));
     } finally {
       setLoading(false);
     }
@@ -60,7 +85,7 @@ const ChatListPage: React.FC = () => {
       }
     } catch (error) {
       console.error("Ошибка при открытии чата:", error);
-      message.error("Не удалось открыть чат в Telegram");
+      message.error(t("chats.errors.openError", "Не удалось открыть чат в Telegram"));
     }
   };
 
@@ -79,14 +104,14 @@ const ChatListPage: React.FC = () => {
       return chat.patient
         ? `${chat.patient.firstName || ""} ${chat.patient.lastName || ""}`.trim() ||
             chat.patient.username ||
-            "Пациент"
-        : "Пациент";
+            t("chats.patient", "Пациент")
+        : t("chats.patient", "Пациент");
     } else {
       return chat.doctor
         ? `${chat.doctor.firstName || ""} ${chat.doctor.lastName || ""}`.trim() ||
             chat.doctor.username ||
-            "Врач"
-        : "Врач";
+            t("chats.doctor", "Врач")
+        : t("chats.doctor", "Врач");
     }
   };
 
@@ -99,7 +124,39 @@ const ChatListPage: React.FC = () => {
   };
 
   const getServiceTypeText = (serviceType: string) => {
-    return serviceType === "analysis" ? "Расшифровка анализов" : "Консультация";
+    return serviceType === "analysis"
+      ? t("chats.analysis", "Расшифровка анализов")
+      : t("chats.consultation", "Консультация");
+  };
+
+  const getDoctorProfileId = (chat: Chat): number | null => {
+    // В Chat должен быть doctor с doctorProfile
+    if (chat.doctor?.doctorProfile?.id) {
+      return chat.doctor.doctorProfile.id;
+    }
+    // Если нет в данных, пытаемся получить через API врача
+    // Но для этого нужен doctorId, который у нас есть
+    // Пока возвращаем null и показываем ошибку
+    return null;
+  };
+
+  const handleReviewClick = (e: React.MouseEvent, chat: Chat) => {
+    e.stopPropagation();
+    const doctorProfileId = getDoctorProfileId(chat);
+    if (!doctorProfileId) {
+      message.error(t("review.errors.doctorNotFound", "Не удалось найти профиль врача"));
+      return;
+    }
+    setSelectedChat(chat);
+    setReviewModalOpen(true);
+  };
+
+  const handleReviewSuccess = (review: Review) => {
+    if (selectedChat) {
+      setReviews((prev: Record<number, Review>) => ({ ...prev, [selectedChat.id]: review }));
+    }
+    setReviewModalOpen(false);
+    setSelectedChat(null);
   };
 
   if (loading) {
@@ -120,7 +177,9 @@ const ChatListPage: React.FC = () => {
 
       <Card className={styles.card}>
         <Title level={3} className={styles.title}>
-          {user?.role === "DOCTOR" ? "Мои пациенты" : "Мои врачи"}
+          {user?.role === "DOCTOR"
+            ? t("chats.myPatients", "Мои пациенты")
+            : t("chats.myDoctors", "Мои врачи")}
         </Title>
 
         {chats.length === 0 ? (
@@ -128,8 +187,8 @@ const ChatListPage: React.FC = () => {
             <MessageOutlined className={styles.emptyIcon} />
             <Text className={styles.emptyText}>
               {user?.role === "DOCTOR"
-                ? "У вас пока нет пациентов"
-                : "У вас пока нет чатов с врачами"}
+                ? t("chats.emptyDoctor", "У вас пока нет пациентов")
+                : t("chats.empty", "У вас пока нет чатов с врачами")}
             </Text>
           </div>
         ) : (
@@ -138,7 +197,11 @@ const ChatListPage: React.FC = () => {
             renderItem={(chat: Chat) => (
               <List.Item
                 className={styles.chatItem}
-                onClick={() => handleOpenChat(chat)}
+                onClick={() => {
+                  if (chat.status === "ACTIVE") {
+                    handleOpenChat(chat);
+                  }
+                }}
               >
                 <List.Item.Meta
                   avatar={
@@ -163,12 +226,27 @@ const ChatListPage: React.FC = () => {
                       </Text>
                       <Text className={styles.status}>
                         {chat.status === "ACTIVE"
-                          ? "Активен"
+                          ? t("chats.active", "Активен")
                           : chat.status === "COMPLETED"
-                            ? "Завершен"
-                            : "Отменен"}
+                            ? t("chats.completed", "Завершен")
+                            : t("chats.cancelled", "Отменен")}
                       </Text>
                     </div>
+                  }
+                  actions={
+                    chat.status === "COMPLETED" && !reviews[chat.id] && user?.role === "PATIENT"
+                      ? [
+                          <Button
+                            key="review"
+                            type="link"
+                            icon={<StarOutlined />}
+                            onClick={(e: React.MouseEvent) => handleReviewClick(e, chat)}
+                            size="small"
+                          >
+                            {t("review.leaveReview", "Оставить отзыв")}
+                          </Button>,
+                        ]
+                      : []
                   }
                 />
               </List.Item>
@@ -176,6 +254,19 @@ const ChatListPage: React.FC = () => {
           />
         )}
       </Card>
+
+      {selectedChat && (
+        <ReviewModal
+          open={reviewModalOpen}
+          onClose={() => {
+            setReviewModalOpen(false);
+            setSelectedChat(null);
+          }}
+          doctorProfileId={getDoctorProfileId(selectedChat) || 0}
+          chatId={selectedChat.id}
+          onSuccess={handleReviewSuccess}
+        />
+      )}
     </div>
   );
 };

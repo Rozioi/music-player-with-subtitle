@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+    overflow-x: hidden;
     background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
 }
 
