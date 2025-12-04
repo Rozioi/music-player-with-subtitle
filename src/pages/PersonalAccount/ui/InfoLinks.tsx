@@ -2,22 +2,28 @@ import React from "react";
 import styles from "../styles/InfoLinks.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const InfoLinks: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const links = [
     {
-      label: "Как происходит получение товара",
+      label: t("infoLinks.delivery"),
       icon: <MdArrowForwardIos />,
       link: "delivery",
     },
     {
-      label: "Как происходит оплата",
+      label: t("infoLinks.paymentProc"),
       icon: <MdArrowForwardIos />,
-      link: "paymentProc",
+      link: "infoLinks.paymentProc",
     },
-    { label: "Обратная связь", icon: <MdArrowForwardIos />, link: "contacts" },
+    {
+      label: t("infoLinks.contacts"),
+      icon: <MdArrowForwardIos />,
+      link: "contacts",
+    },
   ];
 
   return (

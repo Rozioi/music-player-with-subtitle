@@ -30,7 +30,10 @@ const LoginPage = () => {
   const handleLogin = async () => {
     if (!phone || phone.length < 10) {
       messageApi.error(
-        t("auth.phoneValidationError", "Пожалуйста, введите корректный номер телефона"),
+        t(
+          "auth.phoneValidationError",
+          "Пожалуйста, введите корректный номер телефона",
+        ),
       );
       return;
     }
@@ -39,9 +42,7 @@ const LoginPage = () => {
     try {
       const response = await loginFunc(phone);
       if (response.success) {
-        messageApi.success(
-          t("auth.loginSuccess", "Вход выполнен успешно"),
-        );
+        messageApi.success(t("auth.loginSuccess", "Вход выполнен успешно"));
         navigate("/home");
       } else {
         messageApi.error(
@@ -68,42 +69,40 @@ const LoginPage = () => {
           <IoIosArrowBack />
         </div>
         <div className={styles.loginCard}>
-        <div className={styles.formContainer}>
+          <div className={styles.formContainer}>
             <h1 className={styles.title}>{t("auth.loginTitle")}</h1>
-            <p className={styles.subtitle}>
-              {t("auth.loginSubtitle")}
-            </p>
+            <p className={styles.subtitle}>{t("auth.loginSubtitle")}</p>
 
-          <div className={styles.inputWrapper}>
-            <label>
+            <div className={styles.inputWrapper}>
+              <label>
                 {t("auth.phoneLabel")}
-              <PhoneInput
-                country={"kz"}
-                value={phone}
-                onChange={setPhone}
-                inputClass={styles.phoneInput}
-                containerClass={styles.phoneContainer}
-                buttonClass={styles.flagDropdown}
-                dropdownClass={styles.countryList}
-                preferredCountries={["kz", "by", "ru", "ua"]}
-                placeholder="+7 (000) 000-00-00"
-                inputProps={{
-                  name: "phone",
-                  required: true,
-                }}
-                enableSearch={true}
-                specialLabel={""}
-              />
-            </label>
-          </div>
+                <PhoneInput
+                  country={"kz"}
+                  value={phone}
+                  onChange={setPhone}
+                  inputClass={styles.phoneInput}
+                  containerClass={styles.phoneContainer}
+                  buttonClass={styles.flagDropdown}
+                  dropdownClass={styles.countryList}
+                  preferredCountries={["kz", "by", "ru", "ua"]}
+                  placeholder="+7 (000) 000-00-00"
+                  inputProps={{
+                    name: "phone",
+                    required: true,
+                  }}
+                  enableSearch={true}
+                  specialLabel={""}
+                />
+              </label>
+            </div>
 
-          <button
-            className={styles.loginButton}
-            onClick={handleLogin}
-            disabled={isLoading}
-          >
+            <button
+              className={styles.loginButton}
+              onClick={handleLogin}
+              disabled={isLoading}
+            >
               {isLoading ? t("auth.loginLoading") : t("auth.loginButton")}
-          </button>
+            </button>
 
             <div className={styles.privacyWrapper}>
               <span className={styles.privacyText}>
@@ -117,7 +116,7 @@ const LoginPage = () => {
                 rel="noopener noreferrer"
                 className={styles.legalLink}
               >
-                Пользовательское соглашение
+                {t("auth.userAgreementLink")}
               </a>
 
               <span className={styles.dot}>•</span>
@@ -127,7 +126,7 @@ const LoginPage = () => {
                 rel="noopener noreferrer"
                 className={styles.legalLink}
               >
-                Политика конфиденциальности
+                {t("auth.privacyLink")}
               </a>
             </div>
           </div>

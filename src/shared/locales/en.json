@@ -20,6 +20,8 @@
     "goToLogin": "log in",
     "acceptTerms": "I accept",
     "privacyPolicy": "privacy policy",
+    "userAgreementLink": "User Agreement",
+    "privacyLink": "Privacy Policy",
     "termsOfUse": "terms of use",
     "and": "and",
     "app": "application"
@@ -161,6 +163,9 @@
     "updateError": "Error updating profile",
     "consultationFeeError": "Consultation fee cannot be negative",
     "descriptionError": "Description must contain at least 10 characters",
+    "contacts": "Contacts",
+    "payment": "Payment",
+    "delivery": "Delivery",
     "user": "User",
     "photo": "Profile Photo"
   },
@@ -331,6 +336,10 @@
       "years2_4": "years",
       "years5plus": "years"
     }
+  },
+  "infoLinks": {
+    "delivery": "How the product is received",
+    "paymentProc": "How the payment is made",
+    "contacts": "Feedback"
   }
 }
-
