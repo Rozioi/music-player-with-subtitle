@@ -5,7 +5,11 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ["rozioi.pro", "madly-modern-brill.cloudpub.ru"],
+    allowedHosts: [
+      "rozioi.pro",
+      "madly-modern-brill.cloudpub.ru",
+      "rampantly-reasonable-millipede.cloudpub.ru",
+    ],
   },
   assetsInclude: ["**/*.md"],
   build: {

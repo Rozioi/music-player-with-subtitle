@@ -81,6 +81,18 @@
     "chats": "Chats",
     "profile": "Profile"
   },
+  "doctorProfile": {
+    "badge": "Doctor profile",
+    "specialist": "Specialist",
+    "price": "Consultation fee",
+    "about": "About the doctor",
+    "emptyDescription": "Description is not provided",
+    "save": "Save",
+    "cancel": "Cancel",
+    "updated": "Doctor profile updated",
+    "descriptionError": "Description must be at least 10 characters long"
+  },
+
   "doctor": {
     "profile": {
       "mainInfo": "Main information",
@@ -95,6 +107,7 @@
     },
     "search": {
       "title": "Find a doctor",
+      "enCatANDName": "Enter a name or a category",
       "noResults": "No doctors found"
     }
   },
@@ -142,7 +155,7 @@
     "name": "Name",
     "phone": "Phone Number",
     "card": "Payment Card",
-    "topUp": "Top Up",
+    "bringOut": "Bring Out",
     "doctorProfile": "Doctor Profile",
     "specialization": "Specialization",
     "consultationFee": "Consultation Fee (₸)",

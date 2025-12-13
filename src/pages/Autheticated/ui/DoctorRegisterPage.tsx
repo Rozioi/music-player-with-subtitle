@@ -26,7 +26,19 @@ const DoctorRegisterPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const SPECIALIZATIONS = {
+    therapist: t("doctorRegistration.therapist"),
+    pediatrician: t("doctorRegistration.pediatrician"),
+    surgeon: t("doctorRegistration.surgeon"),
+    dentist: t("doctorRegistration.dentist"),
+    cardiologist: t("doctorRegistration.cardiologist"),
+    gynecologist: t("doctorRegistration.gynecologist"),
+    ent: t("doctorRegistration.ent"),
+    neurologist: t("doctorRegistration.neurologist"),
+    ophthalmologist: t("doctorRegistration.ophthalmologist"),
+    psychiatrist: t("doctorRegistration.psychiatrist"),
+    dermatologist: t("doctorRegistration.dermatologist"),
+  };
   const [doctorData, setDoctorData] = useState<DoctorInput>({
     specialization: "",
     qualification: "",
@@ -124,6 +136,7 @@ const DoctorRegisterPage = () => {
 
   return (
     <div className={styles.pageContainer} ref={pageContainerRef}>
+      {contextHolder}
       <div className={styles.page}>
         <div onClick={goBack} className={styles.backButton}>
           <IoIosArrowBack />
@@ -133,7 +146,9 @@ const DoctorRegisterPage = () => {
           <h1 className={styles.title}>{t("doctorRegistration.title")}</h1>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.phone")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.phone")}
+            </label>
             <PhoneInput
               country={"kz"}
               value={phoneNumber}
@@ -148,7 +163,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.experience")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.experience")}
+            </label>
             <Input
               type="number"
               placeholder={t("doctorRegistration.experiencePlaceholder")}
@@ -164,7 +181,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.specialization")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.specialization")}
+            </label>
             <Select
               placeholder={t("doctorRegistration.specializationPlaceholder")}
               className={styles.select}
@@ -173,25 +192,18 @@ const DoctorRegisterPage = () => {
                 handleChange("qualification", val);
               }}
               value={doctorData.specialization || undefined}
-              options={[
-                { value: "Терапевт", label: t("doctorRegistration.specializations.therapist") },
-                { value: "Педиатр", label: t("doctorRegistration.specializations.pediatrician") },
-                { value: "Хирург", label: t("doctorRegistration.specializations.surgeon") },
-                { value: "Стоматолог", label: t("doctorRegistration.specializations.dentist") },
-                { value: "Кардиолог", label: t("doctorRegistration.specializations.cardiologist") },
-                { value: "Гинеколог", label: t("doctorRegistration.specializations.gynecologist") },
-                { value: "ЛОР", label: t("doctorRegistration.specializations.ent") },
-                { value: "Невролог", label: t("doctorRegistration.specializations.neurologist") },
-                { value: "Офтальмолог", label: t("doctorRegistration.specializations.ophthalmologist") },
-                { value: "Психиатр", label: t("doctorRegistration.specializations.psychiatrist") },
-                { value: "Дерматолог", label: t("doctorRegistration.specializations.dermatologist") },
-              ]}
+              options={Object.entries(SPECIALIZATIONS).map(([key, label]) => ({
+                value: key,
+                label: t(`doctorRegistration.specializations.${key}`),
+              }))}
               disabled={isSubmitting}
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.qualification")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.qualification")}
+            </label>
             <Select
               placeholder={t("doctorRegistration.qualificationPlaceholder")}
               className={styles.select}
@@ -224,7 +236,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.education")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.education")}
+            </label>
             <Input
               placeholder={t("doctorRegistration.educationPlaceholder")}
               className={styles.input}
@@ -235,7 +249,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.description")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.description")}
+            </label>
             <TextArea
               placeholder={t("doctorRegistration.descriptionPlaceholder")}
               rows={4}
@@ -247,7 +263,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.consultationFee")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.consultationFee")}
+            </label>
             <Input
               type="number"
               placeholder={t("doctorRegistration.consultationFeePlaceholder")}
@@ -262,7 +280,9 @@ const DoctorRegisterPage = () => {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t("doctorRegistration.country")}</label>
+            <label className={styles.label}>
+              {t("doctorRegistration.country")}
+            </label>
             <SelectCountry
               options={options}
               placeholder={t("doctorRegistration.countryPlaceholder")}
@@ -343,7 +363,9 @@ const DoctorRegisterPage = () => {
             loading={isSubmitting}
             block
           >
-            {isSubmitting ? t("doctorRegistration.submitting") : t("doctorRegistration.submit")}
+            {isSubmitting
+              ? t("doctorRegistration.submitting")
+              : t("doctorRegistration.submit")}
           </Button>
         </div>
       </div>

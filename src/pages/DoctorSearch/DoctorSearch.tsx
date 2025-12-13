@@ -8,21 +8,23 @@ import { useAppNavigation } from "../../shared/hooks/useAppNavigation";
 import { apiClient } from "../../api/api";
 import type { DoctorCardData, DoctorProfile } from "../../api/types";
 import { createDoctorSlug } from "../../shared/utils/slug";
+import { useTranslation } from "react-i18next";
 
 const preloadDoctorProfile = () =>
   import("../../pages/DoctorProfile/DoctorProfilePage");
 
 const doctorCategories = [
-  "Гинеколог",
-  "ЛОР",
-  "Невролог",
-  "Офтальмолог",
-  "Педиатр",
-  "Психиатр",
-  "Терапевт",
-  "Стоматолог",
-  "Кардиолог",
-  "Дерматолог",
+  "gynecologist",
+  "ent",
+  "neurologist",
+  "ophthalmologist",
+  "pediatrician",
+  "psychiatrist",
+  "therapist",
+  "dentist",
+  "surgeon",
+  "cardiologist",
+  "dermatologist",
 ];
 
 const getCountryFlag = (country: string): string => {
@@ -41,7 +43,7 @@ const getCountryFlag = (country: string): string => {
 const DoctorSearchPage: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
-
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [doctors, setDoctors] = useState<DoctorCardData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,10 +114,11 @@ const DoctorSearchPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      {contextHolder}
       <div onClick={goBack} className={styles.backButton}>
         <IoIosArrowBack />
       </div>
-      <h2 className={styles.title}>Поиск врача</h2>
+      <h2 className={styles.title}>{t("doctor.search.title")}</h2>
 
       {error && !loading && (
         <div
@@ -133,7 +136,7 @@ const DoctorSearchPage: React.FC = () => {
       )}
 
       <Input.Search
-        placeholder="Введите имя или категорию"
+        placeholder={t("doctor.search.enCatANDName")}
         allowClear
         className={styles.search}
         value={search}
@@ -145,7 +148,6 @@ const DoctorSearchPage: React.FC = () => {
       <List
         dataSource={filteredCategories}
         renderItem={(item: string) => {
-          // Фильтруем врачей по специализации (category соответствует specialization)
           const categoryDoctors = doctors.filter(
             (d: DoctorCardData) =>
               d.specialization === item || d.category === item,
@@ -157,7 +159,7 @@ const DoctorSearchPage: React.FC = () => {
                 className={`${styles.item} ${openCategory === item ? styles.activeItem : ""}`}
                 onClick={() => handleToggleCategory(item)}
               >
-                <span>{item}</span>
+                <span>{t(`doctorRegistration.specializations.${item}`)}</span>
                 <Button
                   type="text"
                   shape="circle"
@@ -191,7 +193,7 @@ const DoctorSearchPage: React.FC = () => {
                     })
                   ) : (
                     <div className={styles.empty}>
-                      Нет врачей этой категории
+                      {t("doctor.search.noResults")}
                     </div>
                   )}
                 </div>

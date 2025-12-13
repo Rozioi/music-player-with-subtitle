@@ -46,7 +46,7 @@
     font-weight: 600;
 }
 
-.topUp {
+.bringOut {
     color: white !important;
     text-decoration: underline;
 
@@ -133,6 +133,11 @@
     &:active {
         transform: translateY(0);
     }
+}
+
+.about,
+.description {
+    overflow: hidden;
 }
 
 .logoutButton {
