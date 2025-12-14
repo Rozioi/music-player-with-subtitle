@@ -22,6 +22,7 @@ const ChatListPage: React.FC = () => {
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [reviews, setReviews] = useState<Record<number, Review>>({});
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     loadChats();
@@ -35,20 +36,20 @@ const ChatListPage: React.FC = () => {
         window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
 
       if (!telegramId) {
-        message.error(t("chats.errors.unknownUser", "Не удалось определить пользователя"));
+        messageApi.error(
+          t("chats.errors.unknownUser", "Не удалось определить пользователя"),
+        );
         setLoading(false);
         return;
       }
 
       const response = await apiClient.getChats(telegramId);
       if (response.success && response.data) {
-        // Показываем активные и завершенные чаты (для возможности оставить отзыв)
         const visibleChats = response.data.filter(
           (chat) => chat.status === "ACTIVE" || chat.status === "COMPLETED",
         );
         setChats(visibleChats);
 
-        // Загружаем отзывы для завершенных чатов
         const completedChats = response.data.filter(
           (chat) => chat.status === "COMPLETED",
         );
@@ -56,17 +57,23 @@ const ChatListPage: React.FC = () => {
           if (chat.id) {
             const reviewResponse = await apiClient.getReviewByChat(chat.id);
             if (reviewResponse.success && reviewResponse.data) {
-              setReviews((prev: Record<number, Review>) => ({ ...prev, [chat.id]: reviewResponse.data! }));
+              setReviews((prev: Record<number, Review>) => ({
+                ...prev,
+                [chat.id]: reviewResponse.data!,
+              }));
             }
           }
         }
       } else {
-        message.error(
-          response.error || t("chats.errors.loadError", "Не удалось загрузить чаты"),
+        messageApi.error(
+          response.error ||
+            t("chats.errors.loadError", "Не удалось загрузить чаты"),
         );
       }
     } catch (err) {
-      message.error(t("chats.errors.loadError", "Ошибка при загрузке чатов"));
+      messageApi.error(
+        t("chats.errors.loadError", "Ошибка при загрузке чатов"),
+      );
     } finally {
       setLoading(false);
     }
@@ -85,7 +92,9 @@ const ChatListPage: React.FC = () => {
       }
     } catch (error) {
       console.error("Ошибка при открытии чата:", error);
-      message.error(t("chats.errors.openError", "Не удалось открыть чат в Telegram"));
+      messageApi.error(
+        t("chats.errors.openError", "Не удалось открыть чат в Telegram"),
+      );
     }
   };
 
@@ -130,13 +139,10 @@ const ChatListPage: React.FC = () => {
   };
 
   const getDoctorProfileId = (chat: Chat): number | null => {
-    // В Chat должен быть doctor с doctorProfile
     if (chat.doctor?.doctorProfile?.id) {
       return chat.doctor.doctorProfile.id;
     }
-    // Если нет в данных, пытаемся получить через API врача
-    // Но для этого нужен doctorId, который у нас есть
-    // Пока возвращаем null и показываем ошибку
+
     return null;
   };
 
@@ -144,7 +150,9 @@ const ChatListPage: React.FC = () => {
     e.stopPropagation();
     const doctorProfileId = getDoctorProfileId(chat);
     if (!doctorProfileId) {
-      message.error(t("review.errors.doctorNotFound", "Не удалось найти профиль врача"));
+      messageApi.error(
+        t("review.errors.doctorNotFound", "Не удалось найти профиль врача"),
+      );
       return;
     }
     setSelectedChat(chat);
@@ -153,7 +161,10 @@ const ChatListPage: React.FC = () => {
 
   const handleReviewSuccess = (review: Review) => {
     if (selectedChat) {
-      setReviews((prev: Record<number, Review>) => ({ ...prev, [selectedChat.id]: review }));
+      setReviews((prev: Record<number, Review>) => ({
+        ...prev,
+        [selectedChat.id]: review,
+      }));
     }
     setReviewModalOpen(false);
     setSelectedChat(null);
@@ -171,6 +182,7 @@ const ChatListPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      {contextHolder}
       <div onClick={goBack} className={styles.backButton}>
         <IoIosArrowBack />
       </div>
@@ -234,13 +246,17 @@ const ChatListPage: React.FC = () => {
                     </div>
                   }
                   actions={
-                    chat.status === "COMPLETED" && !reviews[chat.id] && user?.role === "PATIENT"
+                    chat.status === "COMPLETED" &&
+                    !reviews[chat.id] &&
+                    user?.role === "PATIENT"
                       ? [
                           <Button
                             key="review"
                             type="link"
                             icon={<StarOutlined />}
-                            onClick={(e: React.MouseEvent) => handleReviewClick(e, chat)}
+                            onClick={(e: React.MouseEvent) =>
+                              handleReviewClick(e, chat)
+                            }
                             size="small"
                           >
                             {t("review.leaveReview", "Оставить отзыв")}
