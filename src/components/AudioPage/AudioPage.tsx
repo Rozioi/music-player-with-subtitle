@@ -41,7 +41,7 @@ const AudioPage = () => {
   const music: Music[] = [
     {
       id: 0,
-      src: "/a.mp3",
+      src: "https://cdn.whyp.it/f33c03bb-38ca-48ee-bc39-58f48e440fc5.mp3?token=IsJzX96XeW2FOCbeX_bbnFxzR5n2HVg4vfKYiaSMU7I&filename=a.mp3&expires=1767299936",
       vttSrc: "/a.vtt",
       picture:
         "https://avatars.yandex.net/get-music-content/17730916/ea772c01.a.39762741-1/m1000x1000",
@@ -50,7 +50,7 @@ const AudioPage = () => {
     },
     {
       id: 1,
-      src: "/b.mp3",
+      src: "https://cdn.whyp.it/2a342fe8-ef8f-4042-be72-272303373d47.mp3?token=RoZXq4AFegWKnj_H_yeeCAzWQj7U3oU3HVNLRwUgswA&filename=b.mp3&expires=1767299718",
       vttSrc: "/b.vtt",
       picture:
         "https://i.scdn.co/image/ab67616d00001e02820d86dd139951127b1d4001",
@@ -59,7 +59,7 @@ const AudioPage = () => {
     },
     {
       id: 2,
-      src: "/c.mp3",
+      src: "https://cdn.whyp.it/7c03906e-c09d-42b6-a5a2-a2d65e98777a.mp3?token=_4OlgdZDgEjaFGPoHeRX-2HL-LOailaP2g3YvlgsXag&filename=c.mp3&expires=1767299854",
       vttSrc: "/c.vtt",
       picture:
         "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/2b/8e/22/2b8e2217-e449-dc03-9571-6d458118f383/cover.jpg/630x630bf-60.jpg",
@@ -69,7 +69,7 @@ const AudioPage = () => {
 
     {
       id: 3,
-      src: "/d.mp3",
+      src: "https://cdn.whyp.it/1944cebf-b1c5-4863-9d46-ff53f7417769.mp3?token=26Y3p3DBXkEm04_KH7YmTaNPYa9xLa6Ppevxx85Thbc&filename=d.mp3&expires=1767299891",
       vttSrc: "/d.vtt",
       picture:
         "https://t2.genius.com/unsafe/516x516/https%3A%2F%2Fimages.genius.com%2Fe87d4748a09b51625745759ca1766b96.1000x1000x1.png",
@@ -189,6 +189,7 @@ const AudioPage = () => {
           <span className={styles.time}>{formatTime(duration)}</span>
         </div>
       </div>
+
       <div className={styles.cuesContainer}>
         <div ref={cuesScrollRef} className={styles.cuesScroll}>
           {activeCue === -1 && (
