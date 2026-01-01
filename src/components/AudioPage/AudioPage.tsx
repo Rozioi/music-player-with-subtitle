@@ -1,4 +1,4 @@
-import { act, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPause, FaPlay } from "react-icons/fa6";
 
 import styles from "./AudioPage.module.scss";
@@ -30,7 +30,7 @@ const AudioPage = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
   const cuesScrollRef = useRef<HTMLDivElement>(null);
-  const lineRefs = useRef<HTMLDivElement[] | null>([]);
+  const lineRefs = useRef<HTMLDivElement[]>([]);
 
   const [duration, setDuration] = useState(0);
   const [current, setCurrent] = useState(0);
@@ -81,9 +81,7 @@ const AudioPage = () => {
     if (!cuesScrollRef.current || activeCue < 0) return;
 
     const parent = cuesScrollRef.current;
-
-    const activeLine = lineRefs.current[activeCue];
-
+    const activeLine = lineRefs.current?.[activeCue];
     if (!activeLine) return;
 
     const parentHeight = parent.clientHeight;
@@ -115,7 +113,7 @@ const AudioPage = () => {
       id: i,
       startTime: cue.startTime,
       endTime: cue.endTime,
-      text: cue.text,
+      text: (cue as VTTCue).text,
     }));
 
     setCues(parsed);
@@ -205,7 +203,9 @@ const AudioPage = () => {
           {cues.map((cue, i) => (
             <div
               key={cue.id}
-              ref={(el) => (lineRefs.current[i] = el)}
+              ref={(el) => {
+                if (el) lineRefs.current[i] = el;
+              }}
               className={i === activeCue ? styles.activeCue : styles.cue}
               onClick={() => {
                 if (audioRef.current) {
