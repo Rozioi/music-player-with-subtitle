@@ -28,7 +28,7 @@ const formatTime = (s: number) => {
 
 const AudioPage = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const activeLineRef = useRef<HTMLDivElement>(null);
+
   const cuesScrollRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<HTMLDivElement[]>([]);
 
