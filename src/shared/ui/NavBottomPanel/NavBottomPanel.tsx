@@ -7,11 +7,9 @@ import { IoSearch } from "react-icons/io5";
 import { PiChatCircleTextFill } from "react-icons/pi";
 import { BsFillPersonFill } from "react-icons/bs";
 
-// Предзагрузка компонентов при наведении
 const preloadMain = () => import("../../../pages/Main/Main");
-const preloadSearch = () => import("../../../pages/DoctorSearch/DoctorSearch");
-const preloadChats = () => import("../../../pages/ChatList/ChatListPage");
-const preloadProfile = () => import("../../../pages/PersonalAccount/PersonalAccountPage");
+const preloadProfile = () =>
+  import("../../../pages/PersonalAccount/PersonalAccountPage");
 
 export const NavBottomPanel = () => {
   const location = useLocation();
@@ -36,8 +34,8 @@ export const NavBottomPanel = () => {
       // но не для публичного роута /doctor/:slug
       return (
         (pathname === "/search" ||
-        pathname.startsWith("/search/") ||
-        pathname === "/analyses") &&
+          pathname.startsWith("/search/") ||
+          pathname === "/analyses") &&
         !pathname.startsWith("/doctor/")
       );
     }

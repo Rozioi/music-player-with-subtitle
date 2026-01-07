@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: [
+      "localhost",
+      "localhost:5173",
+
       "rozioi.pro",
       "madly-modern-brill.cloudpub.ru",
       "rampantly-reasonable-millipede.cloudpub.ru",
