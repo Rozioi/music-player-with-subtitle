@@ -34,7 +34,6 @@ const formatTime = (sec: number) => {
 
 const AudioPage = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const activeLineRef = useRef<HTMLDivElement>(null);
   const lyricsScrollRef = useRef<HTMLDivElement>(null);
   const [isVolumeOpen, setIsVolumeOpen] = useState(false);
   const volumeRef = useRef<HTMLDivElement>(null);
